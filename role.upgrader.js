@@ -2,7 +2,7 @@ var roleUpgrader = {
 
     /** @param {Creep} creep **/
     run: function (creep) {
-        if (creep.needsRenew()) {
+        if (creep.needsRenew(500, 1400)) {
             return;
         }
 
@@ -18,13 +18,7 @@ var roleUpgrader = {
             }
         }
         else {
-            var closestSource = creep.pos.findClosestByPath(FIND_SOURCES);
-            if (closestSource != undefined) {
-                if (creep.harvest(closestSource) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(closestSource);
-                }
-                //creep.pos.
-            }
+            creep.getNearestEnergy();
         }
     }
 };

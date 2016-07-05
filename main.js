@@ -2,6 +2,8 @@ var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 var roleRepairer = require('role.repairer');
+var roleExtractor = require('role.extractor');
+
 var aiSpawn = require('ai.spawn');
 var aiRenew = require('ai.renew');
 require('prototype.spawn')();
@@ -17,7 +19,8 @@ module.exports.loop = function () {
         }
     }
 
-
+    // Game.creeps['Declan'].moveTo(27,36);
+    // Game.creeps['Mason'].moveTo(41,19);
     aiRenew.run();
     aiSpawn.run();
 
@@ -50,6 +53,9 @@ module.exports.loop = function () {
         }
         if (creep.memory.role == 'repairer') {
             roleRepairer.run(creep);
+        }
+        if (creep.memory.role == 'extractor') {
+            roleExtractor.run(creep);
         }
     }
 }

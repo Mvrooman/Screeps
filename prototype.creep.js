@@ -13,4 +13,23 @@ module.exports = function () {
         }
         return false;
     }
+
+    Creep.prototype.getNearestEnergy = function () {
+        var closestEnergy = this.pos.findClosestByPath(FIND_DROPPED_ENERGY, {filter: (s) => s.room == this.room && s.amount >= 200});
+        if (closestEnergy != undefined) {
+            if (this.pickup(closestEnergy) == ERR_NOT_IN_RANGE) {
+                this.moveTo(closestEnergy);
+            }
+        }
+        else {
+
+            var closestSource = this.pos.findClosestByPath(FIND_SOURCES);
+
+            if (closestSource != undefined) {
+                if (this.harvest(closestSource) == ERR_NOT_IN_RANGE) {
+                    this.moveTo(closestSource);
+                }
+            }
+        }
+    }
 };

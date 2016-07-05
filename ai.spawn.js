@@ -1,10 +1,12 @@
 var aiSpawn = {
     run: function () {
-        var targetHarvesters = 5;
+        var targetExtractors = 2;
+        var targetHarvesters = 3;
         var targetUpgraders = 3;
         var targetRepairers = 2;
-        var targetBuilders = 6;
+        var targetBuilders = 4;
 
+        var extractors = _.filter(Game.creeps, (creep) => creep.memory.role == 'extractor');
         var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
         var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
         var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
@@ -14,8 +16,13 @@ var aiSpawn = {
             'Harvesters [' + harvesters.length + '/' + targetHarvesters + ']   ' +
             'Upgraders[' + upgraders.length + '/' + targetUpgraders + ']   ' +
             'Builders[' + builders.length + '/' + targetBuilders + ']   ' +
-            'Repairers[' + repairers.length + '/' + targetRepairers + ']');
+            'Repairers[' + repairers.length + '/' + targetRepairers + ']  ' +
+            'Extractors[' + extractors.length + '/' + targetExtractors + ']');
 
+        if (extractors.length < targetExtractors && false) {
+            Game.spawns.HomeSpawn.createCreep([WORK, WORK, WORK, WORK, WORK, MOVE], {role: 'extractor'})
+            // return;
+        }
         if (harvesters.length < targetHarvesters) {
             Game.spawns.HomeSpawn.createCreepWithRole(Game.spawns.HomeSpawn.room.energyCapacityAvailable, 'harvester');
             return;
