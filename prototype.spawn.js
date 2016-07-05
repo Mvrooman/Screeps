@@ -11,7 +11,6 @@ module.exports = function () {
         for (let i = 0; i < numSegments; i++) {
             body.push(MOVE);
         }
-
         this.createCreep(body, undefined, {role: roleName});
     }
 }
