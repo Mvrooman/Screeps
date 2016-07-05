@@ -1,39 +1,38 @@
 var aiSpawn = {
     run: function () {
+        var targetHarvesters = 6;
+        var targetUpgraders = 3;
+        var targetRepairers = 2;
+        var targetBuilders = 3;
 
         var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
-        if (harvesters.length < 6) {
-            var newName = Game.spawns.HomeSpawn.createCreepWithRole(Game.spawns.HomeSpawn.room.energyCapacityAvailable, 'harvester');
-            console.log('Spawning new harvester: ' + newName);
-            return;
-        }
-
+        var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
         var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
-
-        if (builders.length < 3) {
-            var newName = Game.spawns.HomeSpawn.createCreepWithRole(Game.spawns.HomeSpawn.room.energyCapacityAvailable, 'builder');
-            // if (newName != undefined)
-            console.log('Spawning new builder: ' + newName);
-            return;
-
-        }
-
         var repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer');
 
-        if (repairers.length < 2) {
-            var newName = Game.spawns.HomeSpawn.createCreepWithRole(Game.spawns.HomeSpawn.room.energyCapacityAvailable, 'repairer');
-            // if (newName != undefined)
-            console.log('Spawning new repairer: ' + newName);
-            return;
-        }
-        var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
-        if (upgraders.length < 3) {
-            var newName = Game.spawns.HomeSpawn.createCreepWithRole(Game.spawns.HomeSpawn.room.energyCapacityAvailable, 'upgrader');
-            //  if (newName != undefined)
-            console.log('Spawning new upgrader: ' + newName);
-            return;
+        console.log(
+            'Harvesters [' + harvesters.length + '/' + targetHarvesters + ']   ' +
+            'Upgraders[' + upgraders.length + '/' + targetUpgraders + ']   ' +
+            'Builders[' + builders.length + '/' + targetBuilders + ']   ' +
+            'Repairers[' + repairers.length + '/' + targetRepairers + ']');
 
+        if (harvesters.length < targetHarvesters) {
+            Game.spawns.HomeSpawn.createCreepWithRole(Game.spawns.HomeSpawn.room.energyCapacityAvailable, 'harvester');
+            return;
         }
+        if (upgraders.length < targetUpgraders) {
+            Game.spawns.HomeSpawn.createCreepWithRole(Game.spawns.HomeSpawn.room.energyCapacityAvailable, 'upgrader');
+            return;
+        }
+        if (builders.length < targetBuilders) {
+            Game.spawns.HomeSpawn.createCreepWithRole(Game.spawns.HomeSpawn.room.energyCapacityAvailable, 'builder');
+            return;
+        }
+        if (repairers.length < targetRepairers) {
+            Game.spawns.HomeSpawn.createCreepWithRole(Game.spawns.HomeSpawn.room.energyCapacityAvailable, 'repairer');
+            return;
+        }
+
     }
 }
 module.exports = aiSpawn;
