@@ -1,9 +1,9 @@
 var aiSpawn = {
     run: function () {
-        var targetHarvesters = 6;
+        var targetHarvesters = 4;
         var targetUpgraders = 3;
         var targetRepairers = 2;
-        var targetBuilders = 3;
+        var targetBuilders = 6;
 
         var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
         var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
