@@ -2,16 +2,7 @@ var roleUpgrader = {
 
     /** @param {Creep} creep **/
     run: function (creep) {
-
-        if (!creep.memory.renewing && creep.ticksToLive < 500) {
-            creep.memory.renewing = true;
-        }
-        if (creep.memory.renewing) {
-            if (creep.ticksToLive > 1400) {
-                creep.memory.renewing = false;
-            }
-            var closestSpawn = creep.pos.findClosestByRange(FIND_MY_SPAWNS);
-            creep.moveTo(closestSpawn);
+        if (creep.needsRenew()) {
             return;
         }
 

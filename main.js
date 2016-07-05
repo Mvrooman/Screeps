@@ -5,6 +5,7 @@ var roleRepairer = require('role.repairer');
 var aiSpawn = require('ai.spawn');
 var aiRenew = require('ai.renew');
 require('prototype.spawn')();
+require('prototype.creep')();
 
 
 module.exports.loop = function () {

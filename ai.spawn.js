@@ -1,6 +1,6 @@
 var aiSpawn = {
     run: function () {
-        var targetHarvesters = 4;
+        var targetHarvesters = 5;
         var targetUpgraders = 3;
         var targetRepairers = 2;
         var targetBuilders = 6;
