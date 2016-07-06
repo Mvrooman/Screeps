@@ -20,23 +20,27 @@ var aiSpawn = {
             'Extractors[' + extractors.length + '/' + targetExtractors + ']');
 
         if (extractors.length < targetExtractors && false) {
-            Game.spawns.HomeSpawn.createCreep([WORK, WORK, WORK, WORK, WORK, MOVE], {role: 'extractor'})
-            // return;
+            Game.spawns.HomeSpawn.createCreep([WORK, WORK, WORK, WORK, WORK, MOVE], {role: 'extractor'});
+            return;
         }
         if (harvesters.length < targetHarvesters) {
-            Game.spawns.HomeSpawn.createCreepWithRole(Game.spawns.HomeSpawn.room.energyCapacityAvailable, 'harvester');
+            Game.spawns.HomeSpawn.createCreep([WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE], {role: 'harvester'});
+            //Game.spawns.HomeSpawn.createCreepWithRole(Game.spawns.HomeSpawn.room.energyCapacityAvailable, 'harvester');
             return;
         }
         if (upgraders.length < targetUpgraders) {
-            Game.spawns.HomeSpawn.createCreepWithRole(Game.spawns.HomeSpawn.room.energyCapacityAvailable, 'upgrader');
+            //Game.spawns.HomeSpawn.createCreepWithRole(Game.spawns.HomeSpawn.room.energyCapacityAvailable, 'upgrader');
+            Game.spawns.HomeSpawn.createCreep([WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE], {role: 'upgrader'});
             return;
         }
         if (builders.length < targetBuilders) {
-            Game.spawns.HomeSpawn.createCreepWithRole(Game.spawns.HomeSpawn.room.energyCapacityAvailable, 'builder');
+            Game.spawns.HomeSpawn.createCreep([WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE], {role: 'builder'});
+            //Game.spawns.HomeSpawn.createCreepWithRole(Game.spawns.HomeSpawn.room.energyCapacityAvailable, 'builder');
             return;
         }
         if (repairers.length < targetRepairers) {
-            Game.spawns.HomeSpawn.createCreepWithRole(Game.spawns.HomeSpawn.room.energyCapacityAvailable, 'repairer');
+            Game.spawns.HomeSpawn.createCreep([WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE], {role: 'repairer'});
+            //Game.spawns.HomeSpawn.createCreepWithRole(Game.spawns.HomeSpawn.room.energyCapacityAvailable, 'repairer');
             return;
         }
 

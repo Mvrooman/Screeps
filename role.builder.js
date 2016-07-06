@@ -2,10 +2,17 @@ var roleBuilder = {
 
     /** @param {Creep} creep **/
     run: function (creep) {
+        creep.say('B');
 
+        if (creep.needsRecycled()) {
+            return;
+        }
+        
         if (creep.needsRenew(500, 1400)) {
             return;
         }
+
+      
 
         if (creep.memory.building && creep.carry.energy == 0) {
             creep.memory.building = false;

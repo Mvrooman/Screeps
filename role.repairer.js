@@ -2,6 +2,9 @@ var roleRepairer = {
 
     /** @param {Creep} creep **/
     run: function (creep) {
+        if (creep.needsRecycled()) {
+            return;
+        }
         if (creep.needsRenew(500, 1400)) {
             return;
         }

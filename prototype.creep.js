@@ -14,8 +14,19 @@ module.exports = function () {
         return false;
     }
 
+    Creep.prototype.needsRecycled = function () {
+
+        if (this.memory.recycle) {
+            this.say("Recycle Me")
+            var closestSpawn = this.pos.findClosestByRange(FIND_MY_SPAWNS);
+            this.moveTo(closestSpawn);
+            return true;
+        }
+        return false;
+    }
+
     Creep.prototype.getNearestEnergy = function () {
-        var closestEnergy = this.pos.findClosestByPath(FIND_DROPPED_ENERGY, {filter: (s) => s.room == this.room && s.amount >= 50});
+        var closestEnergy = this.pos.findClosestByPath(FIND_DROPPED_ENERGY, {filter: (s) => s.room == this.room && s.amount >= 10});
         if (closestEnergy != undefined) {
             if (this.pickup(closestEnergy) == ERR_NOT_IN_RANGE) {
                 this.moveTo(closestEnergy);

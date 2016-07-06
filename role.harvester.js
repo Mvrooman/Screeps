@@ -2,7 +2,13 @@ var roleHarvester = {
 
     /** @param {Creep} creep **/
     run: function (creep) {
-
+        if(creep.body.length < 9)
+        {
+            creep.memory.recycle = true;
+        }
+        if (creep.needsRecycled()) {
+            return;
+        }
         if (creep.needsRenew(500, 1400)) {
             return;
         }
@@ -32,7 +38,7 @@ var roleHarvester = {
             }
             else {
                 console.log('No where to deliver energy: ' + creep.name);
-                creep.drop(RESOURCE_ENERGY);
+               // creep.drop(RESOURCE_ENERGY);
             }
         }
     }
