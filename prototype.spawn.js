@@ -19,6 +19,5 @@ module.exports = function () {
         else if (!result < 0) {
             console.log('Spawning new ' + roleName + ': ' + result);
         }
-        return result;
     }
 }

@@ -47,7 +47,7 @@ module.exports = function () {
         }
 
 
-        var closestSource = this.pos.findClosestByPath(FIND_SOURCES);
+        var closestSource = this.pos.findClosestByRange(FIND_SOURCES);
         if (closestSource != undefined) {
             if (this.harvest(closestSource) == ERR_NOT_IN_RANGE) {
                 this.moveTo(closestSource);
