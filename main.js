@@ -21,6 +21,9 @@ module.exports.loop = function () {
 
     // Game.creeps['Declan'].moveTo(27,36);
     // Game.creeps['Mason'].moveTo(41,19);
+    
+
+
     aiRenew.run();
     aiSpawn.run();
 

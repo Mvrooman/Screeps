@@ -15,21 +15,34 @@ module.exports = function () {
     }
 
     Creep.prototype.getNearestEnergy = function () {
-        var closestEnergy = this.pos.findClosestByPath(FIND_DROPPED_ENERGY, {filter: (s) => s.room == this.room && s.amount >= 200});
+        var closestEnergy = this.pos.findClosestByPath(FIND_DROPPED_ENERGY, {filter: (s) => s.room == this.room && s.amount >= 50});
         if (closestEnergy != undefined) {
             if (this.pickup(closestEnergy) == ERR_NOT_IN_RANGE) {
                 this.moveTo(closestEnergy);
             }
+            return;
         }
-        else {
 
-            var closestSource = this.pos.findClosestByPath(FIND_SOURCES);
-
-            if (closestSource != undefined) {
-                if (this.harvest(closestSource) == ERR_NOT_IN_RANGE) {
-                    this.moveTo(closestSource);
-                }
+        var closestContainer = this.pos.findClosestByPath(FIND_STRUCTURES,
+            {
+                filter: (s) => s.structureType == STRUCTURE_CONTAINER &&
+                s.store[RESOURCE_ENERGY] > 200
+            });
+        if (closestContainer != undefined) {
+            if (closestContainer.transfer(this, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                this.moveTo(closestContainer);
             }
+            return;
         }
+
+
+        var closestSource = this.pos.findClosestByPath(FIND_SOURCES);
+        if (closestSource != undefined) {
+            if (this.harvest(closestSource) == ERR_NOT_IN_RANGE) {
+                this.moveTo(closestSource);
+            }
+            return;
+        }
+
     }
 };

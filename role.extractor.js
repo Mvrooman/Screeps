@@ -3,7 +3,7 @@ var roleExtractor = {
     /** @param {Creep} creep **/
     run: function (creep) {
 
-        if (creep.needsRenew(500, 1400)) {
+        if (creep.needsRenew(300, 1400)) {
             return;
         }
 
