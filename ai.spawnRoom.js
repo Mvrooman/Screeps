@@ -1,7 +1,60 @@
 var aiSpawnRoom = {
 
     run: function () {
+        function setRoles() {
+            var roomRole1 = {roomName: 'E47N37', roles: []};
+            roomRole1.roles.push({
+                role: 'extractor',
+                count: 2,
+                locations: [new RoomPosition(3, 5, 'E47N37'), new RoomPosition(24, 4, 'E47N37')]
+            });
+            roomRole1.roles.push({
+                role: 'harvester',
+                count: 3
+            });
+            roomRole1.roles.push({
+                role: 'upgrader',
+                count: 6
+            });
 
+            roomRole1.roles.push({
+                role: 'builder',
+                count: 2
+            });
+
+            roomRole1.roles.push({
+                role: 'repairer',
+                count: 2
+            });
+
+            var roomRole2 = {roomName: 'E48N37', roles: []};
+            roomRole2.roles.push({
+                role: 'extractor',
+                count: 2,
+                locations: [new RoomPosition(10, 38, 'E48N37'), new RoomPosition(3, 8, 'E48N37')]
+            });
+            roomRole2.roles.push({
+                role: 'claimer',
+                count: 2
+            });
+            roomRole2.roles.push({
+                role: 'builder',
+                count: 2
+            });
+            roomRole2.roles.push({
+                role: 'repairer',
+                count: 1
+            });
+
+            roomRole2.roles.push({
+                role: 'hauler',
+                dropRoomName: 'E47N37',
+                pickupRoomName: 'E48N37',
+                count: 3
+            });
+            var roomRoles = [roomRole1, roomRole2];
+            return roomRoles;
+        }
         function spawnCreep(roomName, role, creepsInRole) {
             switch (role.role) {
                 case 'extractor':
@@ -67,7 +120,7 @@ var aiSpawnRoom = {
                     }
                     break;
                 case 'hauler':
-                    var result = Game.spawns.HomeSpawn.createCreep([CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE,], {
+                    var result = Game.spawns.HomeSpawn.createCreep([CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE,MOVE, WORK], {
                         role: 'hauler',
                         pickupRoomName: roomName,
                         dropRoomName: role.dropRoomName,
@@ -76,7 +129,7 @@ var aiSpawnRoom = {
 
                     if (result == ERR_NOT_ENOUGH_ENERGY) {
                         console.log('Waiting to spawn ' + role.role.capitalizeFirstLetter() + ' in ' + roomName +
-                            ' - [' + Game.spawns.HomeSpawn.room.energyAvailable + '/' + 600);
+                            ' - [' + Game.spawns.HomeSpawn.room.energyAvailable + '/' + 700);
                     }
                     else if (!result < 0) {
                         console.log('Spawning new ' + role.role + ': ' + result +
@@ -97,62 +150,24 @@ var aiSpawnRoom = {
                         console.log('Spawning new ' + role.role + ': ' + result + '[' + roomName + ']');
                     }
                     break;
+                case 'harvester':
+                    var result = Game.spawns.HomeSpawn.createCreep([WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE], {
+                        role: 'harvester',
+                        destination: Game.flags[roomName].pos
+                    });
+
+                    if (result == ERR_NOT_ENOUGH_ENERGY) {
+                        console.log('Waiting to spawn ' + role.role.capitalizeFirstLetter() + ' in ' + roomName +
+                            ' - [' + Game.spawns.HomeSpawn.room.energyAvailable + '/' + 700);
+                    }
+                    else if (!result < 0) {
+                        console.log('Spawning new ' + role.role + ': ' + result + '[' + roomName + ']');
+                    }
+                    break;
             }
         }
 
-        function setRoles() {
-            var roomRole1 = {roomName: 'E47N37', roles: []};
-            roomRole1.roles.push({
-                role: 'extractor',
-                count: 2,
-                locations: [new RoomPosition(3, 5, 'E47N37'), new RoomPosition(24, 4, 'E47N37')]
-            });
-            roomRole1.roles.push({
-                role: 'harvester',
-                count: 3
-            });
-            roomRole1.roles.push({
-                role: 'upgrader',
-                count: 6
-            });
 
-            roomRole1.roles.push({
-                role: 'builder',
-                count: 2
-            });
-
-            roomRole1.roles.push({
-                role: 'repairer',
-                count: 2
-            });
-
-            var roomRole2 = {roomName: 'E48N37', roles: []};
-            roomRole2.roles.push({
-                role: 'extractor',
-                count: 2,
-                locations: [new RoomPosition(10, 38, 'E48N37'), new RoomPosition(3, 8, 'E48N37')]
-            });
-            roomRole2.roles.push({
-                role: 'builder',
-                count: 2
-            });
-            roomRole2.roles.push({
-                role: 'repairer',
-                count: 1
-            });
-            roomRole2.roles.push({
-                role: 'claimer',
-                count: 2
-            });
-            roomRole2.roles.push({
-                role: 'hauler',
-                dropRoomName: 'E47N37',
-                pickupRoomName: 'E48N37',
-                count: 3
-            });
-            var roomRoles = [roomRole1, roomRole2];
-            return roomRoles;
-        }
 
         var roomRoles = setRoles();
 
@@ -162,7 +177,8 @@ var aiSpawnRoom = {
             for (var j in roomRoles[i].roles) {
                 var creepsInRole = _.filter(Game.creeps, (creep) =>
                 ((creep.memory.destination == undefined && creep.pos.roomName == roomRoles[i].roomName) ||
-                (creep.memory.destination != undefined && creep.memory.destination.roomName == roomRoles[i].roomName)) &&
+                (creep.memory.destination != undefined && creep.memory.destination.roomName == roomRoles[i].roomName)||
+                creep.memory.pickupRoomName != undefined && creep.memory.pickupRoomName == roomRoles[i].roomName) &&
                 creep.memory.role == roomRoles[i].roles[j].role);
                 var currentCount = creepsInRole.length;
                 var desiredCount = roomRoles[i].roles[j].count;

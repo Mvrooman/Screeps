@@ -8,8 +8,8 @@ var roleHauler = {
         }
         if (creep.needsRenew(500, 1400)) {
             return;
-        }    
-        if(creep.traveling()){
+        }
+        if (creep.traveling()) {
             return;
         }
 
@@ -19,10 +19,12 @@ var roleHauler = {
         if (!creep.memory.hauling && creep.carry.energy == creep.carryCapacity) {
             creep.memory.destination = Game.flags[creep.memory.dropRoomName].pos;
             creep.memory.hauling = true;
+            return;
         }
         if (creep.memory.hauling && creep.carry.energy == 0) {
             creep.memory.destination = Game.flags[creep.memory.pickupRoomName].pos;
             creep.memory.hauling = false;
+            return;
         }
         if (!creep.memory.hauling) {
             creep.getNearestEnergy();

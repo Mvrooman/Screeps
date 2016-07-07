@@ -52,7 +52,7 @@ module.exports = function () {
     };
 
     Creep.prototype.getNearestEnergy = function () {
-        var closestEnergy = this.pos.findClosestByPath(FIND_DROPPED_ENERGY, {filter: (s) => s.room == this.room && s.amount >= 10});
+        var closestEnergy = this.pos.findClosestByRange(FIND_DROPPED_ENERGY, {filter: (s) => s.room == this.room && s.amount >= 10});
         if (closestEnergy != undefined) {
             if (this.pickup(closestEnergy) == ERR_NOT_IN_RANGE) {
                 this.moveTo(closestEnergy);
@@ -61,7 +61,7 @@ module.exports = function () {
             return;
         }
 
-        var closestContainer = this.pos.findClosestByPath(FIND_STRUCTURES,
+        var closestContainer = this.pos.findClosestByRange(FIND_STRUCTURES,
             {
                 filter: (s) => s.structureType == STRUCTURE_CONTAINER &&
                 s.store[RESOURCE_ENERGY] > 200
