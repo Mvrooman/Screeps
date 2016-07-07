@@ -4,6 +4,7 @@ var roleBuilder = require('role.builder');
 var roleRepairer = require('role.repairer');
 var roleExtractor = require('role.extractor');
 var roleClaimer = require('role.claimer');
+var roleHauler = require('role.hauler');
 
 
 //var aiSpawn = require('ai.spawn');
@@ -30,8 +31,6 @@ module.exports.loop = function () {
         }
     }
 
-    // Game.creeps['Declan'].moveTo(27,36);
-    // Game.creeps['Mason'].moveTo(41,19);
 
     aiRenew.run();
     //aiSpawn.run();
@@ -43,7 +42,7 @@ module.exports.loop = function () {
         var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => structure.hitsMax > 1 && structure.hits < 3000 &&
                 (structure.structureType == STRUCTURE_RAMPART
-                 || structure.structureType == STRUCTURE_WALL)
+                || structure.structureType == STRUCTURE_WALL)
 
             })
             ;
@@ -65,7 +64,7 @@ module.exports.loop = function () {
         }
         else {
             if (creep.memory.role == 'upgrader') {
-              //  roleUpgrader.run(creep);
+                roleUpgrader.run(creep);
             }
             else if (creep.memory.role == 'builder') {
                 roleBuilder.run(creep);
@@ -79,6 +78,9 @@ module.exports.loop = function () {
             }
             else if (creep.memory.role == 'claimer') {
                 roleClaimer.run(creep);
+            }
+            else if (creep.memory.role == 'hauler') {
+                roleHauler.run(creep);
             }
         }
     }

@@ -36,6 +36,11 @@ module.exports = function () {
             var destination = this.memory.destination;
             if (this.pos.x == destination.x && this.pos.y == destination.y && this.pos.roomName == destination.roomName) {
                 console.log('Destination reached');
+                if (this.move(TOP) != 0)
+                    if (this.move(BOTTOM) != 0)
+                        if (this.move(LEFT) != 0)
+                            this.move(RIGHT);
+
                 this.memory.destination = undefined;
                 return false;
             }

@@ -66,6 +66,37 @@ var aiSpawnRoom = {
                         console.log('Spawning new ' + role.role + ': ' + result + '[' + roomName + ']');
                     }
                     break;
+                case 'hauler':
+                    var result = Game.spawns.HomeSpawn.createCreep([CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE,], {
+                        role: 'hauler',
+                        pickupRoomName: roomName,
+                        dropRoomName: role.dropRoomName,
+                        destination: Game.flags[roomName].pos
+                    });
+
+                    if (result == ERR_NOT_ENOUGH_ENERGY) {
+                        console.log('Waiting to spawn ' + role.role.capitalizeFirstLetter() + ' in ' + roomName +
+                            ' - [' + Game.spawns.HomeSpawn.room.energyAvailable + '/' + 600);
+                    }
+                    else if (!result < 0) {
+                        console.log('Spawning new ' + role.role + ': ' + result +
+                            '[' + missingLocations[0].roomName + ' ' + missingLocations[0].x + ',' + missingLocations[0].y + ']');
+                    }
+                    break;
+                case 'upgrader':
+                    var result = Game.spawns.HomeSpawn.createCreep([WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE], {
+                        role: 'upgrader',
+                        destination: Game.flags[roomName].pos
+                    });
+
+                    if (result == ERR_NOT_ENOUGH_ENERGY) {
+                        console.log('Waiting to spawn ' + role.role.capitalizeFirstLetter() + ' in ' + roomName +
+                            ' - [' + Game.spawns.HomeSpawn.room.energyAvailable + '/' + 700);
+                    }
+                    else if (!result < 0) {
+                        console.log('Spawning new ' + role.role + ': ' + result + '[' + roomName + ']');
+                    }
+                    break;
             }
         }
 
@@ -112,6 +143,12 @@ var aiSpawnRoom = {
             roomRole2.roles.push({
                 role: 'claimer',
                 count: 2
+            });
+            roomRole2.roles.push({
+                role: 'hauler',
+                dropRoomName: 'E47N37',
+                pickupRoomName: 'E48N37',
+                count: 3
             });
             var roomRoles = [roomRole1, roomRole2];
             return roomRoles;
