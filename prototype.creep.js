@@ -46,13 +46,19 @@ module.exports = function () {
             }
             this.memory.destination = new RoomPosition(this.memory.destination.x, this.memory.destination.y, this.memory.destination.roomName);
             var result = this.moveTo(this.memory.destination);
+            if(result <0 &&this.pos.roomName == destination.roomName )
+            {
+                console.log('Error: '+result);
+                // this.memory.destination = undefined;
+                // return false;
+            }
             return true;
         }
         return false;
     };
 
     Creep.prototype.getNearestEnergy = function () {
-        var closestEnergy = this.pos.findClosestByRange(FIND_DROPPED_ENERGY, {filter: (s) => s.room == this.room && s.amount >= 10});
+        var closestEnergy = this.pos.findClosestByRange(FIND_DROPPED_ENERGY, {filter: (s) => s.room == this.room && s.amount >= 100});
         if (closestEnergy != undefined) {
             if (this.pickup(closestEnergy) == ERR_NOT_IN_RANGE) {
                 this.moveTo(closestEnergy);

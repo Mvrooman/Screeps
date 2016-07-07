@@ -14,12 +14,12 @@ var aiSpawnRoom = {
             });
             roomRole1.roles.push({
                 role: 'upgrader',
-                count: 6
+                count: 4
             });
 
             roomRole1.roles.push({
                 role: 'builder',
-                count: 2
+                count: 0
             });
 
             roomRole1.roles.push({
@@ -35,24 +35,49 @@ var aiSpawnRoom = {
             });
             roomRole2.roles.push({
                 role: 'claimer',
-                count: 2
+                count:2
             });
             roomRole2.roles.push({
                 role: 'builder',
                 count: 2
             });
-            roomRole2.roles.push({
-                role: 'repairer',
-                count: 1
-            });
+
 
             roomRole2.roles.push({
                 role: 'hauler',
                 dropRoomName: 'E47N37',
                 pickupRoomName: 'E48N37',
-                count: 3
+                count: 4
             });
-            var roomRoles = [roomRole1, roomRole2];
+            roomRole2.roles.push({
+                role: 'repairer',
+                count: 1
+            });
+            roomRole2.roles.push({
+                role: 'harvester',
+                count: 0
+            });
+            roomRole2.roles.push({
+                role: 'defense',
+                count: 1
+            });
+
+            var roomRole3 = {roomName: 'E47N38', roles: []};
+            roomRole3.roles.push({
+                role:'tank',
+                count:0
+            });
+
+            var roomRole4 = {roomName: 'E46N37', roles: []};
+            roomRole4.roles.push({
+                role:'defense',
+                count:0
+            });
+            roomRole4.roles.push({
+                role:'attackCreep',
+                count:0
+            });
+            var roomRoles = [roomRole1, roomRole2,roomRole4,roomRole3];
             return roomRoles;
         }
         function spawnCreep(roomName, role, creepsInRole) {
@@ -159,6 +184,48 @@ var aiSpawnRoom = {
                     if (result == ERR_NOT_ENOUGH_ENERGY) {
                         console.log('Waiting to spawn ' + role.role.capitalizeFirstLetter() + ' in ' + roomName +
                             ' - [' + Game.spawns.HomeSpawn.room.energyAvailable + '/' + 700);
+                    }
+                    else if (!result < 0) {
+                        console.log('Spawning new ' + role.role + ': ' + result + '[' + roomName + ']');
+                    }
+                    break;
+                case 'tank':
+                    var result = Game.spawns.HomeSpawn.createCreep([TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,MOVE], {
+                        role: 'tank',
+                        destination: Game.flags[roomName].pos
+                    });
+
+                    if (result == ERR_NOT_ENOUGH_ENERGY) {
+                        console.log('Waiting to spawn ' + role.role.capitalizeFirstLetter() + ' in ' + roomName +
+                            ' - [' + Game.spawns.HomeSpawn.room.energyAvailable + '/' + 210);
+                    }
+                    else if (!result < 0) {
+                        console.log('Spawning new ' + role.role + ': ' + result + '[' + roomName + ']');
+                    }
+                    break;
+                case 'defense':
+                    var result = Game.spawns.HomeSpawn.createCreep([TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,ATTACK,MOVE,MOVE,MOVE],{
+                        role:'defense',
+                        destination: Game.flags[roomName].pos
+                    });
+
+                    if (result == ERR_NOT_ENOUGH_ENERGY) {
+                        console.log('Waiting to spawn ' + role.role.capitalizeFirstLetter() + ' in ' + roomName +
+                            ' - [' + Game.spawns.HomeSpawn.room.energyAvailable + '/' + 290);
+                    }
+                    else if (!result < 0) {
+                        console.log('Spawning new ' + role.role + ': ' + result + '[' + roomName + ']');
+                    }
+                    break;
+                case 'attackCreep':
+                    var result = Game.spawns.HomeSpawn.createCreep([ATTACK,ATTACK,ATTACK,ATTACK,MOVE,MOVE,MOVE],{
+                        role:'attackCreep',
+                        destination: Game.flags[roomName].pos
+                    });
+
+                    if (result == ERR_NOT_ENOUGH_ENERGY) {
+                        console.log('Waiting to spawn ' + role.role.capitalizeFirstLetter() + ' in ' + roomName +
+                            ' - [' + Game.spawns.HomeSpawn.room.energyAvailable + '/' + 290);
                     }
                     else if (!result < 0) {
                         console.log('Spawning new ' + role.role + ': ' + result + '[' + roomName + ']');

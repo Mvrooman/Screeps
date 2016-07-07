@@ -5,6 +5,8 @@ var roleRepairer = require('role.repairer');
 var roleExtractor = require('role.extractor');
 var roleClaimer = require('role.claimer');
 var roleHauler = require('role.hauler');
+var roleStructureAttack = require('role.structureAttack');
+var roleCreepAttack = require('role.creepAttack');
 
 
 //var aiSpawn = require('ai.spawn');
@@ -81,6 +83,15 @@ module.exports.loop = function () {
             }
             else if (creep.memory.role == 'hauler') {
                 roleHauler.run(creep);
+            }
+            else if (creep.memory.role == 'tank') {
+                roleStructureAttack.run(creep);
+            }
+            else if (creep.memory.role == 'defense') {
+                roleStructureAttack.run(creep);
+            }
+            else if (creep.memory.role == 'attackCreep') {
+                roleCreepAttack.run(creep);
             }
         }
     }
