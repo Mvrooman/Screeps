@@ -3,8 +3,10 @@ var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 var roleRepairer = require('role.repairer');
 var roleExtractor = require('role.extractor');
+var roleClaimer = require('role.claimer');
 
-var aiSpawn = require('ai.spawn');
+
+//var aiSpawn = require('ai.spawn');
 var aiSpawnRoom = require('ai.spawnRoom');
 
 var aiRenew = require('ai.renew');
@@ -40,8 +42,8 @@ module.exports.loop = function () {
     if (tower) {
         var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => structure.hitsMax > 1 && structure.hits < 3000 &&
-                structure.structureType == STRUCTURE_RAMPART
-                // || //structure.structureType == STRUCTURE_WALL
+                (structure.structureType == STRUCTURE_RAMPART
+                 || structure.structureType == STRUCTURE_WALL)
 
             })
             ;
@@ -63,21 +65,20 @@ module.exports.loop = function () {
         }
         else {
             if (creep.memory.role == 'upgrader') {
-                // if(creep.body.length==6){creep.memory.recycle=true;}
-                roleUpgrader.run(creep);
+              //  roleUpgrader.run(creep);
             }
             else if (creep.memory.role == 'builder') {
                 roleBuilder.run(creep);
             }
             else if (creep.memory.role == 'repairer') {
-                if (creep.body.length == 6) {
-                    creep.memory.recycle = true;
-                }
 
                 roleRepairer.run(creep);
             }
             else if (creep.memory.role == 'extractor') {
                 roleExtractor.run(creep);
+            }
+            else if (creep.memory.role == 'claimer') {
+                roleClaimer.run(creep);
             }
         }
     }

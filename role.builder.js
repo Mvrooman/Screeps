@@ -8,7 +8,6 @@ var roleBuilder = {
         if (creep.needsRenew(500, 1400)) {
             return;
         }
-
         if(creep.traveling()){
             return;
         }

@@ -6,8 +6,8 @@ var aiSpawnRoom = {
             switch (role.role) {
                 case 'extractor':
                     var currentLocations = _.pluck(creepsInRole, 'memory.sourcePosition');
-                    var missingLocations = _.filter(role.locations, function (obj) {
-                        return !_.findWhere(currentLocations, obj);
+                    var missingLocations = _.filter(role.locations, function (loc) {
+                        return !_.findWhere(currentLocations, loc);
                     });
                     var result = Game.spawns.HomeSpawn.createCreep([WORK, WORK, WORK, WORK, WORK, CARRY, MOVE], {
                         role: 'extractor',
@@ -47,6 +47,20 @@ var aiSpawnRoom = {
                     if (result == ERR_NOT_ENOUGH_ENERGY) {
                         console.log('Waiting to spawn ' + role.role.capitalizeFirstLetter() + ' in ' + roomName +
                             ' - [' + Game.spawns.HomeSpawn.room.energyAvailable + '/' + 700);
+                    }
+                    else if (!result < 0) {
+                        console.log('Spawning new ' + role.role + ': ' + result + '[' + roomName + ']');
+                    }
+                    break;
+                case 'claimer':
+                    var result = Game.spawns.HomeSpawn.createCreep([CLAIM, MOVE, MOVE], {
+                        role: 'claimer',
+                        destination: Game.flags[roomName].pos
+                    });
+
+                    if (result == ERR_NOT_ENOUGH_ENERGY) {
+                        console.log('Waiting to spawn ' + role.role.capitalizeFirstLetter() + ' in ' + roomName +
+                            ' - [' + Game.spawns.HomeSpawn.room.energyAvailable + '/' + 800);
                     }
                     else if (!result < 0) {
                         console.log('Spawning new ' + role.role + ': ' + result + '[' + roomName + ']');
@@ -94,6 +108,10 @@ var aiSpawnRoom = {
             roomRole2.roles.push({
                 role: 'repairer',
                 count: 1
+            });
+            roomRole2.roles.push({
+                role: 'claimer',
+                count: 2
             });
             var roomRoles = [roomRole1, roomRole2];
             return roomRoles;

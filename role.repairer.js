@@ -8,6 +8,9 @@ var roleRepairer = {
         if (creep.needsRenew(500, 1400)) {
             return;
         }
+        if(creep.traveling()){
+            return;
+        }
 
         if (creep.memory.repairing && creep.carry.energy == 0) {
             creep.memory.repairing = false;
