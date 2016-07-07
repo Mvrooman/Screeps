@@ -8,9 +8,14 @@ var roleExtractor = {
         if (creep.needsRenew(100, 1400)) {
             return;
         }
-        if (creep.pos.x != creep.memory.home.x || creep.pos.y != creep.memory.home.y) {
-            creep.say('Going Home');
-            creep.moveTo(creep.memory.home.x, creep.memory.home.y);
+        var sourcePosition = new RoomPosition(creep.memory.sourcePosition.x, creep.memory.sourcePosition.y, creep.memory.sourcePosition.roomName);
+
+
+        if (creep.pos.x != sourcePosition.x ||
+            creep.pos.y != sourcePosition.y ||
+            creep.room.name != sourcePosition.roomName) {
+            creep.say('-> Source')
+            var result = creep.moveTo(sourcePosition);
             return;
         }
         else {
@@ -18,7 +23,7 @@ var roleExtractor = {
             if (closestSource != undefined) {
                 var result = creep.harvest(closestSource);
                 if (result == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(creep.memory.home.x, creep.memory.home.y);
+                    creep.moveTo(sourcePosition);
                 }
             }
         }

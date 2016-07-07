@@ -1,10 +1,10 @@
 var aiSpawn = {
     run: function () {
-        var targetExtractors = 2;
+        var targetExtractors = 3;
         var targetHarvesters = 3;
         var targetUpgraders = 6;
         var targetRepairers = 2;
-        var targetBuilders = 2;
+        var targetBuilders = 4;
 
         var extractors = _.filter(Game.creeps, (creep) => creep.memory.role == 'extractor');
         var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
@@ -19,16 +19,22 @@ var aiSpawn = {
             'Repairers[' + repairers.length + '/' + targetRepairers + ']  ' +
             'Extractors[' + extractors.length + '/' + targetExtractors + ']');
 
-        if (extractors.length < targetExtractors && false) {
-            Game.spawns.HomeSpawn.createCreep([WORK, WORK, WORK, WORK, WORK, MOVE], {
+
+        // Game.creeps['Molly'].memory.sourcePosition = new RoomPosition(25,4,'E47N37');
+        // Game.creeps['Lincoln'].memory.sourcePosition = new RoomPosition(3,5,'E47N37');
+        // Game.creeps['Leah'].memory.sourcePosition = new RoomPosition(10,38,'E48N37');
+
+        if (extractors.length < targetExtractors &&false) {
+            Game.spawns.HomeSpawn.createCreep([WORK, WORK, WORK, WORK, WORK, CARRY, MOVE], {
                 role: 'extractor',
-                home: {x: 24, y: 4}
+                sourcePosition: new RoomPosition(10, 38, 'E48N37'),
+                destination: Game.flags['E48N37'].pos
             });
             return;
         }
         if (harvesters.length < targetHarvesters) {
 
-            Game.spawns.HomeSpawn.createCreep([WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE,MOVE], {role: 'harvester'});
+            Game.spawns.HomeSpawn.createCreep([WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE], {role: 'harvester'});
             //Game.spawns.HomeSpawn.createCreepWithRole(Game.spawns.HomeSpawn.room.energyCapacityAvailable, 'harvester');
             return;
         }
@@ -38,7 +44,7 @@ var aiSpawn = {
             return;
         }
         if (builders.length < targetBuilders) {
-            Game.spawns.HomeSpawn.createCreep([WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE], {role: 'builder'});
+            Game.spawns.HomeSpawn.createCreep([WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE], {role: 'builder',destination:Game.flags['E48N37'].pos});
             //Game.spawns.HomeSpawn.createCreep([WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE], {role: 'builder'});
             //Game.spawns.HomeSpawn.createCreepWithRole(Game.spawns.HomeSpawn.room.energyCapacityAvailable, 'builder');
             return;

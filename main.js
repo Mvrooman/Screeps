@@ -5,9 +5,12 @@ var roleRepairer = require('role.repairer');
 var roleExtractor = require('role.extractor');
 
 var aiSpawn = require('ai.spawn');
+var aiSpawnRoom = require('ai.spawnRoom');
+
 var aiRenew = require('ai.renew');
 require('prototype.spawn')();
 require('prototype.creep')();
+require('prototype.string')();
 
 
 module.exports.loop = function () {
@@ -29,15 +32,21 @@ module.exports.loop = function () {
     // Game.creeps['Mason'].moveTo(41,19);
 
     aiRenew.run();
-    aiSpawn.run();
+    //aiSpawn.run();
+    aiSpawnRoom.run();
+
 
     var tower = Game.spawns.HomeSpawn.pos.findClosestByRange(FIND_MY_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_TOWER});
     if (tower) {
         var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (structure) => structure.hitsMax > 1 && structure.hits < 3000 && structure.structureType == STRUCTURE_RAMPART //&& structure.structureType == STRUCTURE_WALL
-        });
+                filter: (structure) => structure.hitsMax > 1 && structure.hits < 3000 &&
+                structure.structureType == STRUCTURE_RAMPART
+                // || //structure.structureType == STRUCTURE_WALL
+
+            })
+            ;
         if (closestDamagedStructure) {
-            console.log('repair tower:' + closestDamagedStructure.pos  )
+            console.log('repair tower:' + closestDamagedStructure.pos)
             tower.repair(closestDamagedStructure);
         }
 
