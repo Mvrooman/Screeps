@@ -51,6 +51,13 @@ var roleHauler = {
                     }
                     return;
                 }
+                else
+                {
+                    if (creep.transfer(creep.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(creep.room.storage);
+                    }
+                    return;
+                }
                 console.log('No where to deliver energy: ' + creep.name);
 
                 creep.drop(RESOURCE_ENERGY);

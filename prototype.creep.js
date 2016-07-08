@@ -1,5 +1,6 @@
 module.exports = function () {
     Creep.prototype.needsRenew = function (minTicks, maxTicks) {
+        return false;
         if (!this.memory.renewing && this.ticksToLive < minTicks) {
             this.memory.renewing = true;
         }
@@ -32,29 +33,35 @@ module.exports = function () {
     };
 
     Creep.prototype.traveling = function () {
+        //return false;
         if (this.memory.destination != undefined) {
             var destination = this.memory.destination;
-            if (this.pos.x == destination.x && this.pos.y == destination.y && this.pos.roomName == destination.roomName) {
+            //if ( Math.abs(this.pos.x-destination.x) <3 && Math.abs(this.pos.y-destination.y) <3 && this.pos.roomName == destination.roomName) {
+            if (this.pos.inRangeTo(destination, 2)) {
                 console.log('Destination reached');
-                if (this.move(TOP) != 0)
-                    if (this.move(BOTTOM) != 0)
-                        if (this.move(LEFT) != 0)
-                            this.move(RIGHT);
-
+                this.memory.sameRoom = 0;
                 this.memory.destination = undefined;
                 return false;
             }
+            // if (this.pos.roomName == destination.roomName) {
+            //     if (this.memory.sameRoom == undefined)
+            //         this.memory.sameRoom = 1;
+            //     else
+            //         this.memory.sameRoom++;
+            // }
             this.memory.destination = new RoomPosition(this.memory.destination.x, this.memory.destination.y, this.memory.destination.roomName);
             var result = this.moveTo(this.memory.destination);
-            if(result <0 &&this.pos.roomName == destination.roomName )
-            {
-                console.log('Error: '+result);
-                // this.memory.destination = undefined;
-                // return false;
-            }
+            //, {reusePath: 50});
+            // if (this.sameRoom>50) {
+            //     console.log('Too long in same room')
+            //     this.memory.sameRoom = 0;
+            //     this.memory.destination = undefined;
+            //     return false;
+            // }
             return true;
         }
         return false;
+
     };
 
     Creep.prototype.getNearestEnergy = function () {
@@ -69,7 +76,7 @@ module.exports = function () {
 
         var closestContainer = this.pos.findClosestByRange(FIND_STRUCTURES,
             {
-                filter: (s) => s.structureType == STRUCTURE_CONTAINER &&
+                filter: (s) => (s.structureType == STRUCTURE_CONTAINER || s.structureType == STRUCTURE_STORAGE) &&
                 s.store[RESOURCE_ENERGY] > 200
             });
         if (closestContainer != undefined) {
@@ -80,7 +87,6 @@ module.exports = function () {
 
             return;
         }
-
 
         var closestSource = this.pos.findClosestByRange(FIND_SOURCES, {filter: (s) => s.energy > 0});
         if (closestSource != undefined) {
@@ -93,9 +99,9 @@ module.exports = function () {
                 // console.log('3:' + this.name);
                 return;
             }
-            if (harvestResult < 0) {
-                console.log('Harvest Error: ' + this.name + ' : ' + harvestResult);
-            }
+            // if (harvestResult < 0) {
+            //     console.log('Harvest Error: ' + this.name + ' : ' + harvestResult);
+            // }
         }
         else {
             console.log('No sources found: ' + this.name);
