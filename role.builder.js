@@ -20,7 +20,9 @@ var roleBuilder = {
         }
 
         if (creep.memory.building) {
-            var closestSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES, {filter: (s) =>s.structureType != STRUCTURE_ROAD});
+            var closestSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES
+                , {filter: (s) =>s.structureType != STRUCTURE_EXTENSION}
+            );
             if (closestSite != undefined) {
                 if (creep.build(closestSite) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(closestSite);

@@ -17,12 +17,14 @@ var roleHauler = {
             creep.memory.hauling = false;
         }
         if (!creep.memory.hauling && creep.carry.energy == creep.carryCapacity) {
-            creep.memory.destination = Game.flags[creep.memory.dropRoomName].pos;
+            if (creep.pos.roomName != creep.memory.dropRoomName)
+                creep.memory.destination = Game.flags[creep.memory.dropRoomName].pos;
             creep.memory.hauling = true;
             return;
         }
         if (creep.memory.hauling && creep.carry.energy == 0) {
-            creep.memory.destination = Game.flags[creep.memory.pickupRoomName].pos;
+            if (creep.pos.roomName != creep.memory.pickupRoomName)
+                creep.memory.destination = Game.flags[creep.memory.pickupRoomName].pos;
             creep.memory.hauling = false;
             return;
         }
@@ -31,7 +33,9 @@ var roleHauler = {
         }
         else {
             var closestStructure = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                filter: (s) => s.energy < s.energyCapacity
+                filter: (s) => s.energy < s.energyCapacity &&
+                (s.structureType != STRUCTURE_LINK ||
+                (s.pos.inRangeTo(Game.flags[creep.memory.dropRoomName].pos, 3) && s.pos.inRangeTo(creep.pos, 10)))
             });
 
             if (closestStructure != undefined) {
@@ -44,6 +48,7 @@ var roleHauler = {
                     {
                         filter: (s) => s.structureType == STRUCTURE_CONTAINER &&
                         s.store[RESOURCE_ENERGY] < 2000
+                        && s.roomName == creep.pos.roomName
                     });
                 if (closestContainer != undefined) {
                     if (creep.transfer(closestContainer, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
@@ -51,8 +56,7 @@ var roleHauler = {
                     }
                     return;
                 }
-                else
-                {
+                else {
                     if (creep.transfer(creep.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(creep.room.storage);
                     }
