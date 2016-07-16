@@ -1,4 +1,7 @@
 module.exports = function () {
+    Creep.prototype.gotoRoom = function (roomName) {
+        this.memory.destination = Game.flags[roomName].pos;
+    }
     Creep.prototype.needsRenew = function (minTicks, maxTicks) {
         return false;
         if (!this.memory.renewing && this.ticksToLive < minTicks) {
@@ -69,15 +72,15 @@ module.exports = function () {
                 s.pos.roomName == this.pos.roomName
             });
         if (closestEnergy != undefined) {
-            if (closestEnergy.amount > 300 || closestContainer == undefined ||
+            if (closestEnergy.amount > 800 || closestContainer == undefined ||
                 this.pos.getRangeTo(closestEnergy.pos.x, closestEnergy.pos.y) <= this.pos.getRangeTo(closestContainer.pos.x, closestContainer.pos.y)) {
                 var result;
-                // if (closestEnergy.pos.inRangeTo(closestContainer, 0)) {
-                //     result = closestContainer.transfer(this, RESOURCE_ENERGY);
-                // }
-                // else {
-                result = this.pickup(closestEnergy);
-                // }
+                if (closestContainer != undefined && closestEnergy.pos.inRangeTo(closestContainer, 0)) {
+                    result = closestContainer.transfer(this, RESOURCE_ENERGY);
+                }
+                else {
+                    result = this.pickup(closestEnergy);
+                }
                 if (result == ERR_NOT_IN_RANGE) {
                     this.moveTo(closestEnergy);
                     this.pickup(closestEnergy);

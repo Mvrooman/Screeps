@@ -43,11 +43,11 @@ module.exports.loop = function () {
 // console.log("    <iframe src='http://localhost/api/values' style='visibility:hidden' width='0' height='0'>");
     aiRenew.run();
     aiSpawnEmpire.run();
-    aiSpawnRoom.run();
+//    aiSpawnRoom.run();
     aiLink.run();
 
 
-    var tower = Game.spawns.HomeSpawn.pos.findClosestByRange(FIND_MY_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_TOWER && s.energy > 0});
+    var tower1 = Game.spawns.HomeSpawn.pos.findClosestByRange(FIND_MY_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_TOWER && s.energy > 10});
     if (tower) {
         var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if (closestHostile) {
@@ -73,6 +73,31 @@ module.exports.loop = function () {
     }
 
     var tower = Game.spawns.TwoSpawn.pos.findClosestByRange(FIND_MY_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_TOWER});
+    if (tower) {
+        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+        if (closestHostile) {
+            tower.attack(closestHostile);
+        }
+        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_SPAWNS);
+        if (closestHostile) {
+            tower.attack(closestHostile);
+        }
+        var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: (structure) => structure.hitsMax > 1 && structure.hits < 1000 &&
+                (structure.structureType == STRUCTURE_RAMPART
+                || structure.structureType == STRUCTURE_WALL||structure.structureType == STRUCTURE_ROAD )
+
+            })
+            ;
+        if (closestDamagedStructure) {
+            console.log('repair tower:' + closestDamagedStructure.pos);
+            tower.repair(closestDamagedStructure);
+        }
+
+
+    }
+
+    var tower = Game.spawns.SpawnThree.pos.findClosestByRange(FIND_MY_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_TOWER});
     if (tower) {
         var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if (closestHostile) {

@@ -18,6 +18,7 @@ var roleCreepAttack = {
             if (attackTarget != undefined) {
                 if (creep.attack(attackTarget[0]) < 0) {
                     creep.moveTo(attackTarget[0]);
+                    creep.attack(attackTarget[0])
                 }
                 return;
             }
@@ -31,6 +32,7 @@ var roleCreepAttack = {
         if (closestHostile) {
             if (creep.attack(closestHostile) < 0) {
                 creep.moveTo(closestHostile);
+                creep.attack(closestHostile)
             }
             return;
         }

@@ -5,7 +5,7 @@ var aiSpawnRoom = {
             var roomRole1 = {roomName: 'E47N37', roles: []};
             roomRole1.roles.push({
                 role: 'harvester',
-                count: 2
+                count: 3
             });
 
             roomRole1.roles.push({
@@ -21,7 +21,7 @@ var aiSpawnRoom = {
 
             roomRole1.roles.push({
                 role: 'upgrader',
-                count: 0
+                count: 1
             });
 
             roomRole1.roles.push({
@@ -36,15 +36,16 @@ var aiSpawnRoom = {
                 locations: [new RoomPosition(10, 38, 'E48N37'), new RoomPosition(3, 8, 'E48N37')]
             });
             roomRole2.roles.push({
+                role: 'reserver',
+                count: 1
+            });
+            roomRole2.roles.push({
                 role: 'hauler',
                 dropRoomName: 'E47N37_LD',
                 pickupRoomName: 'E48N37',
                 count: 4
             });
-            roomRole2.roles.push({
-                role: 'reserver',
-                count: 1
-            });
+
             roomRole2.roles.push({
                 role: 'builder',
                 count: 1
@@ -58,7 +59,7 @@ var aiSpawnRoom = {
 
 
             roomRole2.roles.push({
-                role: 'defense',
+                role: 'attackCreep',
                 destination: 'E48N37_D',
                 count: 1
             });
@@ -83,7 +84,7 @@ var aiSpawnRoom = {
 
             roomRole4.roles.push({
                 role: 'hauler',
-                dropRoomName: 'E47N37',
+                dropRoomName: 'E46N38',
                 pickupRoomName: 'E46N37',
                 count: 4
             });
@@ -91,10 +92,11 @@ var aiSpawnRoom = {
                 role: 'repairer',
                 count: 1
             });
-            // roomRole4.roles.push({
-            //     role: 'builder',
-            //     count: 1
-            // });
+            roomRole4.roles.push({
+                role: 'builder',
+                count: 1
+            });
+
             // roomRole4.roles.push({
             //     role: 'harvester',
             //     count: 0
@@ -161,15 +163,17 @@ var aiSpawnRoom = {
 
             var roomRole7 = {roomName: 'E46N38', roles: []};
 
+
+            roomRole7.roles.push({
+                role: 'harvester',
+                count: 2
+            });
             roomRole7.roles.push({
                 role: 'extractor',
                 count: 2,
                 locations: [new RoomPosition(24, 27, 'E46N38'), new RoomPosition(30, 45, 'E46N38')]
             });
-            roomRole7.roles.push({
-                role: 'harvester',
-                count: 2
-            });
+
             roomRole7.roles.push({
                 role: 'builder',
                 count: 1
@@ -180,7 +184,7 @@ var aiSpawnRoom = {
             });
             roomRole7.roles.push({
                 role: 'upgrader',
-                count: 1
+                count: 2
             });
 
             // roomRole7.roles.push({
@@ -203,10 +207,11 @@ var aiSpawnRoom = {
                 role: 'tank',
                 count: 1
             });
-            var roomRoles = [roomRole8];
-            var roomRoles = [roomRole1, roomRole2, roomRole4, roomRole5, roomRole6,roomRole7];
+            //var roomRoles = [roomRole8];
+            var roomRoles = [roomRole2, roomRole4, roomRole5, roomRole6,roomRole7,roomRole1];
 
-           // var roomRoles = [roomRole4];
+            //var roomRoles = [roomRole1,roomRole2];
+            //var roomRoles = [roomRole1];
 
             return roomRoles;
         }
@@ -388,7 +393,7 @@ var aiSpawnRoom = {
                     }
                     break;
                 case 'attackCreep':
-                    var result = Game.spawns.HomeSpawn.createCreep([TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,ATTACK, ATTACK, ATTACK, ATTACK, MOVE, MOVE, MOVE, MOVE], {
+                    var result = Game.spawns.HomeSpawn.createCreep([TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,MOVE, MOVE, MOVE, MOVE,ATTACK, ATTACK,ATTACK, ATTACK, ATTACK, ATTACK ], {
                         role: 'attackCreep',
                         destination: Game.flags[roomName].pos
                     });

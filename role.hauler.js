@@ -6,14 +6,17 @@ var roleHauler = {
         if (creep.needsRecycled()) {
             return;
         }
-        if (creep.needsRenew(500, 1400)) {
-            return;
-        }
+        // if (creep.needsRenew(500, 1400)) {
+        //     return;
+        // }
         if (creep.traveling()) {
             return;
         }
-        if(Game.flags[creep.memory.dropRoomName] == undefined)
-        {console.log('Error no drop flag');creep.memory.role = 'harvester';return;}
+        if (Game.flags[creep.memory.dropRoomName] == undefined) {
+            console.log('Error no drop flag');
+            creep.memory.role = 'harvester';
+            return;
+        }
 
         if (creep.memory.hauling == undefined) {
             creep.memory.hauling = false;
@@ -39,7 +42,6 @@ var roleHauler = {
                 (s.structureType != STRUCTURE_LINK ||
                 (s.pos.inRangeTo(Game.flags[creep.memory.dropRoomName].pos, 3) && s.pos.inRangeTo(creep.pos, 10)))
             });
-
             if (closestStructure != undefined) {
                 if (creep.transfer(closestStructure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(closestStructure);
@@ -49,9 +51,9 @@ var roleHauler = {
             else {
                 var closestContainer = creep.pos.findClosestByRange(FIND_STRUCTURES,
                     {
-                        filter: (s) => s.structureType == STRUCTURE_CONTAINER &&
-                        s.store[RESOURCE_ENERGY] < 2000
-                        && s.roomName == creep.pos.roomName
+                        filter: (s) => s.structureType == STRUCTURE_CONTAINER
+                        && s.store[RESOURCE_ENERGY] < 2000
+                        && s.room.name == creep.pos.roomName
                     });
                 if (closestContainer != undefined) {
                     if (creep.transfer(closestContainer, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
