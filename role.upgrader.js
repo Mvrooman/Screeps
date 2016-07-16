@@ -2,7 +2,7 @@ var roleUpgrader = {
 
     /** @param {Creep} creep **/
     run: function (creep) {
-creep.say('U');
+//gamecreep.say('U');
         if (creep.needsRecycled()) {
             return;
         }

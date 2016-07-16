@@ -12,6 +12,8 @@ var roleHauler = {
         if (creep.traveling()) {
             return;
         }
+        if(Game.flags[creep.memory.dropRoomName] == undefined)
+        {console.log('Error no drop flag');creep.memory.role = 'harvester';return;}
 
         if (creep.memory.hauling == undefined) {
             creep.memory.hauling = false;
@@ -41,6 +43,7 @@ var roleHauler = {
             if (closestStructure != undefined) {
                 if (creep.transfer(closestStructure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(closestStructure);
+                    creep.transfer(closestStructure, RESOURCE_ENERGY)
                 }
             }
             else {
@@ -53,12 +56,14 @@ var roleHauler = {
                 if (closestContainer != undefined) {
                     if (creep.transfer(closestContainer, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(closestContainer);
+                        creep.transfer(closestContainer, RESOURCE_ENERGY)
                     }
                     return;
                 }
                 else {
                     if (creep.transfer(creep.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(creep.room.storage);
+                        creep.transfer(creep.room.storage, RESOURCE_ENERGY)
                     }
                     return;
                 }

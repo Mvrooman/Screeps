@@ -24,6 +24,7 @@ var roleExtractor = {
                 var result = creep.harvest(closestSource);
                 if (result == ERR_NOT_IN_RANGE) {
                     creep.moveTo(sourcePosition);
+                    creep.harvest(closestSource);
                 }
             }
         }

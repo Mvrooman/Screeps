@@ -57,10 +57,11 @@ module.exports = function () {
         if (closestLink != undefined) {
             if (closestLink.transferEnergy(this) == ERR_NOT_IN_RANGE) {
                 this.moveTo(closestLink);
+                closestLink.transferEnergy(this);
             }
         }
 
-        var closestEnergy = this.pos.findClosestByRange(FIND_DROPPED_ENERGY, {filter: (s) => s.room == this.room && s.amount >= 600});
+        var closestEnergy = this.pos.findClosestByPath(FIND_DROPPED_ENERGY, {filter: (s) => s.room == this.room && s.amount >= 300});
         var closestContainer = this.pos.findClosestByRange(FIND_STRUCTURES,
             {
                 filter: (s) => (s.structureType == STRUCTURE_CONTAINER || s.structureType == STRUCTURE_STORAGE) &&
@@ -68,17 +69,18 @@ module.exports = function () {
                 s.pos.roomName == this.pos.roomName
             });
         if (closestEnergy != undefined) {
-            if (closestEnergy.amount > 800 || closestContainer == undefined ||
+            if (closestEnergy.amount > 300 || closestContainer == undefined ||
                 this.pos.getRangeTo(closestEnergy.pos.x, closestEnergy.pos.y) <= this.pos.getRangeTo(closestContainer.pos.x, closestContainer.pos.y)) {
                 var result;
                 // if (closestEnergy.pos.inRangeTo(closestContainer, 0)) {
                 //     result = closestContainer.transfer(this, RESOURCE_ENERGY);
                 // }
                 // else {
-                result = this.pickup(closestEnergy)
+                result = this.pickup(closestEnergy);
                 // }
                 if (result == ERR_NOT_IN_RANGE) {
                     this.moveTo(closestEnergy);
+                    this.pickup(closestEnergy);
                 }
                 return;
             }
@@ -88,11 +90,12 @@ module.exports = function () {
         if (closestContainer != undefined) {
             if (closestContainer.transfer(this, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 this.moveTo(closestContainer);
+                closestContainer.transfer(this, RESOURCE_ENERGY);
             }
             return;
         }
 
-        // var closestSource = this.pos.findClosestByRange(FIND_SOURCES, {filter: (s) => s.energy > 0});
+        // var closestSource = this.pos.findClosestByRange(FIND_SOURCES, {filter: (s) => s.energy > 0 });
         // if (closestSource != undefined) {
         //     var harvestResult = this.harvest(closestSource);
         //     if (harvestResult == ERR_NOT_IN_RANGE) {

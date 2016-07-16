@@ -2,6 +2,7 @@ var roleBuilder = {
 
     /** @param {Creep} creep **/
     run: function (creep) {
+        creep.say('B');
         if (creep.needsRecycled()) {
             return;
         }
@@ -11,16 +12,17 @@ var roleBuilder = {
         if(creep.traveling()){
             return;
         }
+        if(creep.memory.building == undefined) creep.memory.building = false;
 
         if (creep.memory.building && creep.carry.energy == 0) {
             creep.memory.building = false;
         }
-        if (!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
+        if (!creep.memory.building  && creep.carry.energy == creep.carryCapacity) {
             creep.memory.building = true;
         }
 
         if (creep.memory.building) {
-            var closestSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES
+            var closestSite = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES
                 , {filter: (s) =>s.structureType != STRUCTURE_EXTENSION}
             );
             if (closestSite != undefined) {
@@ -30,8 +32,9 @@ var roleBuilder = {
             }
             else {
 
-                var closestSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+                var closestSite = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
                 if (closestSite != undefined) {
+                    console.log(creep.build(closestSite))
                     if (creep.build(closestSite) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(closestSite);
                     }

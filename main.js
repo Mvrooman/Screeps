@@ -8,8 +8,11 @@ var roleReserver = require('role.reserver');
 var roleHauler = require('role.hauler');
 var roleStructureAttack = require('role.structureAttack');
 var roleCreepAttack = require('role.creepAttack');
+var roleTank = require('role.tank');
 
 var aiSpawnRoom = require('ai.spawnRoom');
+var aiSpawnEmpire = require('ai.spawnEmpire');
+
 
 var aiRenew = require('ai.renew');
 var aiLink = require('ai.link');
@@ -18,7 +21,7 @@ require('prototype.spawn')();
 require('prototype.creep')();
 require('prototype.string')();
 
-//require('Empire');
+require('Empire');
 
 //var profiler = require('screeps-profiler');
 //profiler.enable();
@@ -39,20 +42,50 @@ module.exports.loop = function () {
 
 // console.log("    <iframe src='http://localhost/api/values' style='visibility:hidden' width='0' height='0'>");
     aiRenew.run();
+    aiSpawnEmpire.run();
     aiSpawnRoom.run();
     aiLink.run();
 
 
-    var tower = Game.spawns.HomeSpawn.pos.findClosestByRange(FIND_MY_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_TOWER});
+    var tower = Game.spawns.HomeSpawn.pos.findClosestByRange(FIND_MY_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_TOWER && s.energy > 0});
     if (tower) {
         var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if (closestHostile) {
             tower.attack(closestHostile);
         }
+        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_SPAWNS);
+        if (closestHostile) {
+            tower.attack(closestHostile);
+        }
         var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (structure) => structure.hitsMax > 1 && structure.hits < 3000 &&
+                filter: (structure) => structure.hitsMax > 1 && structure.hits < 1000 &&
                 (structure.structureType == STRUCTURE_RAMPART
-                || structure.structureType == STRUCTURE_WALL)
+                || structure.structureType == STRUCTURE_WALL||structure.structureType == STRUCTURE_ROAD )
+
+            })
+            ;
+        if (closestDamagedStructure) {
+            console.log('repair tower:' + closestDamagedStructure.pos)
+            tower.repair(closestDamagedStructure);
+        }
+
+
+    }
+
+    var tower = Game.spawns.TwoSpawn.pos.findClosestByRange(FIND_MY_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_TOWER});
+    if (tower) {
+        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+        if (closestHostile) {
+            tower.attack(closestHostile);
+        }
+        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_SPAWNS);
+        if (closestHostile) {
+            tower.attack(closestHostile);
+        }
+        var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: (structure) => structure.hitsMax > 1 && structure.hits < 1000 &&
+                (structure.structureType == STRUCTURE_RAMPART
+                || structure.structureType == STRUCTURE_WALL||structure.structureType == STRUCTURE_ROAD )
 
             })
             ;
@@ -87,17 +120,17 @@ module.exports.loop = function () {
         else if (creep.memory.role == 'reserver') {
             roleReserver.run(creep);
         }
-        else if (creep.memory.role == 'hauler') {
-            roleHauler.run(creep);
-        }
+
         else if (creep.memory.role == 'tank') {
-            roleStructureAttack.run(creep);
+            roleTank.run(creep);
         }
         else if (creep.memory.role == 'defense') {
             roleStructureAttack.run(creep);
         }
         else if (creep.memory.role == 'attackCreep') {
             roleCreepAttack.run(creep);
+        } else if (creep.memory.role == 'hauler') {
+            roleHauler.run(creep);
         }
     }
     // });

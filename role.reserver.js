@@ -12,6 +12,7 @@ var roleReserver = {
        // if (creep.claimController(creep.room.controller) < 0) {
             if (creep.reserveController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(creep.room.controller);
+                creep.reserveController(creep.room.controller)
             }
        // }
     }

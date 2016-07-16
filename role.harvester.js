@@ -32,6 +32,7 @@ var roleHarvester = {
             if (closestLink != undefined) {
                 if (closestLink.transferEnergy(creep) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(closestLink);
+                    closestLink.transferEnergy(creep)
                 }
             }
 
@@ -56,6 +57,7 @@ var roleHarvester = {
                     // }
                     if (result == ERR_NOT_IN_RANGE) {
                         creep.moveTo(closestEnergy);
+                        creep.pickup(closestEnergy)
                     }
                     return;
                 }
@@ -66,6 +68,7 @@ var roleHarvester = {
                 var result = closestContainer.transfer(creep, RESOURCE_ENERGY);
                 if (result == ERR_NOT_IN_RANGE) {
                     creep.moveTo(closestContainer);
+                    closestContainer.transfer(creep, RESOURCE_ENERGY)
                 }
 
                 return;
@@ -84,28 +87,29 @@ var roleHarvester = {
             if (closestStorage != undefined) {
                 if (closestStorage.transfer(creep, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(closestStorage);
+                    closestStorage.transfer(creep, RESOURCE_ENERGY)
                 }
                 return;
             }
 
-            var closestSource = creep.pos.findClosestByRange(FIND_SOURCES, {filter: (s) => s.energy > 0});
-            if (closestSource != undefined) {
-                var harvestResult = creep.harvest(closestSource);
-                if (harvestResult == ERR_NOT_IN_RANGE) {
-                    var result = creep.moveTo(closestSource);
-                    // if (result < 0 && result != -11) {
-                    //     console.log('Error moving to source: ' + result);
-                    // }
-                    // console.log('3:' + creep.name);
-                    return;
-                }
-                // if (harvestResult < 0) {
-                //     console.log('Harvest Error: ' + creep.name + ' : ' + harvestResult);
-                // }
-            }
-            else {
-                console.log('No sources found: ' + creep.name);
-            }
+            // var closestSource = creep.pos.findClosestByRange(FIND_SOURCES, {filter: (s) => s.energy > 0});
+            // if (closestSource != undefined) {
+            //     var harvestResult = creep.harvest(closestSource);
+            //     if (harvestResult == ERR_NOT_IN_RANGE) {
+            //         var result = creep.moveTo(closestSource);
+            //         // if (result < 0 && result != -11) {
+            //         //     console.log('Error moving to source: ' + result);
+            //         // }
+            //         // console.log('3:' + creep.name);
+            //         return;
+            //     }
+            //     // if (harvestResult < 0) {
+            //     //     console.log('Harvest Error: ' + creep.name + ' : ' + harvestResult);
+            //     // }
+            // }
+            // else {
+            //     console.log('No sources found: ' + creep.name);
+            // }
 
         }
         else {
@@ -117,6 +121,7 @@ var roleHarvester = {
             if (closestStructure != undefined) {
                 if (creep.transfer(closestStructure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(closestStructure);
+                    creep.transfer(closestStructure, RESOURCE_ENERGY)
                 }
             }
             else {
@@ -128,6 +133,7 @@ var roleHarvester = {
                 if (closestContainer != undefined) {
                     if (creep.transfer(closestContainer, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(closestContainer);
+                        creep.transfer(closestContainer, RESOURCE_ENERGY)
                     }
                     return;
                 }
