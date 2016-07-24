@@ -3,13 +3,23 @@ var roleUpgrader = {
     /** @param {Creep} creep **/
     run: function (creep) {
 //gamecreep.say('U');
+
+        if (creep.traveling()) {
+            return;
+        }
         if (creep.needsRecycled()) {
             return;
         }
         if (creep.needsRenew(500, 1400)) {
             return;
         }
-        if(creep.traveling()){
+
+
+
+        if (creep.room.find(FIND_CONSTRUCTION_SITES).length > 0) {
+            console.log('Upgrader -> Builder');
+            creep.memory.role = 'builder'
+            creep.memory.building = true;
             return;
         }
 

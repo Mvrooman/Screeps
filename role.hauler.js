@@ -21,6 +21,11 @@ var roleHauler = {
         if (creep.memory.hauling == undefined) {
             creep.memory.hauling = false;
         }
+        if(creep.memory.hauling== true && creep.pos.roomName != Game.flags[creep.memory.dropRoomName].pos.roomName )
+        {
+            //stuck?
+            creep.memory.destination = Game.flags[creep.memory.dropRoomName].pos;
+        }
         if (!creep.memory.hauling && creep.carry.energy == creep.carryCapacity) {
             if (creep.pos.roomName != creep.memory.dropRoomName)
                 creep.memory.destination = Game.flags[creep.memory.dropRoomName].pos;

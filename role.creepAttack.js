@@ -2,12 +2,12 @@ var roleCreepAttack = {
 
     /** @param {Creep} creep **/
     run: function (creep) {
-        // if (creep.needsRecycled()) {
-        //     return;
-        // }
         if (creep.traveling()) {
             return;
+        } if (creep.needsRecycled()) {
+            return;
         }
+
 
         var closestAttackFlag = creep.pos.findClosestByPath(FIND_FLAGS, {filter: (f) => f.name.startsWith('Attack')});
 

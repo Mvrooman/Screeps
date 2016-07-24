@@ -20,10 +20,10 @@ var roleRepairer = {
         }
 
         if (creep.memory.repairing) {
-            var structure = creep.pos.findClosestByPath(FIND_STRUCTURES,
+            var structure = creep.pos.findClosestByRange(FIND_STRUCTURES,
                 {
-                    filter: (s) => s.hits <  Math.min(s.hitsMax,100000) * 0.8
-                    && (s.structureType != STRUCTURE_WALL || s.hits < 3000)
+                    filter: (s) => s.hits <  Math.min(s.hitsMax,250000) * 0.8
+                    && (s.structureType != STRUCTURE_WALL || s.hits < 16000)
                 });
             if (structure != undefined) {
                 if (creep.repair(structure) == ERR_NOT_IN_RANGE) {

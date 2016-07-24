@@ -9,10 +9,12 @@ var aiLink = {
                     dropOffLinks = Game.rooms[i].find(FIND_MY_STRUCTURES, {
                         filter: (s) => s.structureType == STRUCTURE_LINK && s != controllerLink
                     });
+                    drop:
                     for (let j in dropOffLinks) {
-                        if (dropOffLinks[j].cooldown == 0 && dropOffLinks[j].energy == LINK_CAPACITY && controllerLink.energy == 0) {
+                        if (dropOffLinks[j].cooldown == 0 && dropOffLinks[j].energy >= LINK_CAPACITY*.7 && controllerLink.energy == 0) {
                             console.log('Transferring Energy')
-                            dropOffLinks[j].transferEnergy(controllerLink)
+                            dropOffLinks[j].transferEnergy(controllerLink);
+                            break drop;
                         }
                     }
                 }

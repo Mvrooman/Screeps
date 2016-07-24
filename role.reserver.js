@@ -14,6 +14,7 @@ var roleReserver = {
                 creep.moveTo(creep.room.controller);
                 creep.reserveController(creep.room.controller)
             }
+        creep.attackController(creep.room.controller)
        // }
     }
 };

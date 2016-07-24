@@ -1,4 +1,4 @@
-let rc = this.moveTo(depot, {costCallback: this.pathCallback});
+//let rc = this.moveTo(depot, {costCallback: this.pathCallback});
 ​
 Creep.prototype.pathCallback = function(roomName,costs) {
     let room = Game.rooms[roomName];

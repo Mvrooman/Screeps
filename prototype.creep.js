@@ -22,8 +22,7 @@ module.exports = function () {
             }
         }
         return false;
-    };
-
+    }
     Creep.prototype.needsRecycled = function () {
 
         if (this.memory.recycle) {
@@ -35,14 +34,37 @@ module.exports = function () {
         return false;
     };
 
+    Creep.prototype.lifespan = function()
+    {
+        if(this.getActiveBodyParts(CLAIM)>0)
+        {
+            return 500;
+        }
+        return 1500;
+    }
+
     Creep.prototype.traveling = function () {
         if (this.memory.destination != undefined) {
             var destination = this.memory.destination;
-            //if ( Math.abs(this.pos.x-destination.x) <3 && Math.abs(this.pos.y-destination.y) <3 && this.pos.roomName == destination.roomName) {
+            var waypoint = this.memory.waypoint;
+            if (waypoint != undefined) {
+                if (this.pos.inRangeTo(waypoint, 2) && this.room.name == waypoint.roomName) {
+                    console.log('Waypoint reached');
+                    this.memory.waypoint = undefined;
+                    return false;
+                }
+                this.memory.waypoint = new RoomPosition(this.memory.waypoint.x, this.memory.waypoint.y, this.memory.waypoint.roomName);
+                var result = this.moveTo(this.memory.waypoint);
+                return true;
+            }
+
             if (this.pos.inRangeTo(destination, 2) && this.room.name == destination.roomName) {
                 console.log('Destination reached');
-                this.memory.sameRoom = 0;
                 this.memory.destination = undefined;
+                if(this.memory.travelTime == undefined)
+                {
+                    this.memory.travelTime = this.lifespan() - this.ticksToLive;
+                }
                 return false;
             }
             this.memory.destination = new RoomPosition(this.memory.destination.x, this.memory.destination.y, this.memory.destination.roomName);
@@ -62,29 +84,38 @@ module.exports = function () {
                 this.moveTo(closestLink);
                 closestLink.transferEnergy(this);
             }
+            return;
         }
 
-        var closestEnergy = this.pos.findClosestByPath(FIND_DROPPED_ENERGY, {filter: (s) => s.room == this.room && s.amount >= 300});
+        var closestEnergy = this.pos.findClosestByRange(FIND_DROPPED_ENERGY, {filter: (s) => s.room == this.room && s.amount >= 300});
         var closestContainer = this.pos.findClosestByRange(FIND_STRUCTURES,
             {
                 filter: (s) => (s.structureType == STRUCTURE_CONTAINER || s.structureType == STRUCTURE_STORAGE) &&
-                s.store[RESOURCE_ENERGY] > 200 &&
+                s.store[RESOURCE_ENERGY] > 300 &&
                 s.pos.roomName == this.pos.roomName
             });
         if (closestEnergy != undefined) {
             if (closestEnergy.amount > 800 || closestContainer == undefined ||
                 this.pos.getRangeTo(closestEnergy.pos.x, closestEnergy.pos.y) <= this.pos.getRangeTo(closestContainer.pos.x, closestContainer.pos.y)) {
                 var result;
-                if (closestContainer != undefined && closestEnergy.pos.inRangeTo(closestContainer, 0)) {
-                    result = closestContainer.transfer(this, RESOURCE_ENERGY);
-                }
-                else {
-                    result = this.pickup(closestEnergy);
-                }
+                // if (closestContainer != undefined && closestEnergy.pos.inRangeTo(closestContainer, 0)) {
+                //     result = closestContainer.transfer(this, RESOURCE_ENERGY);
+                // }
+                // else {
+                result = this.pickup(closestEnergy);
+                //
+                // if (closestContainer != undefined)
+                //     closestContainer.transfer(this, RESOURCE_ENERGY);
+
+                // }
                 if (result == ERR_NOT_IN_RANGE) {
                     this.moveTo(closestEnergy);
+                    if (closestContainer != undefined)
+                        closestContainer.transfer(this, RESOURCE_ENERGY);
                     this.pickup(closestEnergy);
+
                 }
+
                 return;
             }
             // console.log('1:' + this.name);
@@ -97,24 +128,24 @@ module.exports = function () {
             }
             return;
         }
-
-        // var closestSource = this.pos.findClosestByRange(FIND_SOURCES, {filter: (s) => s.energy > 0 });
-        // if (closestSource != undefined) {
-        //     var harvestResult = this.harvest(closestSource);
-        //     if (harvestResult == ERR_NOT_IN_RANGE) {
-        //         var result = this.moveTo(closestSource);
-        //         // if (result < 0 && result != -11) {
-        //         //     console.log('Error moving to source: ' + result);
-        //         // }
-        //         // console.log('3:' + this.name);
-        //         return;
-        //     }
-        //     // if (harvestResult < 0) {
-        //     //     console.log('Harvest Error: ' + this.name + ' : ' + harvestResult);
-        //     // }
-        // }
-        // else {
-        //     console.log('No sources found: ' + this.name);
-        // }
+        var closestSource = this.pos.findClosestByRange(FIND_SOURCES, {filter: (s) => s.energy > 0});
+        if (closestSource != undefined) {
+            var harvestResult = this.harvest(closestSource);
+            if (harvestResult == ERR_NOT_IN_RANGE) {
+                var result = this.moveTo(closestSource);
+                this.harvest(closestSource);
+                // if (result < 0 && result != -11) {
+                //     console.log('Error moving to source: ' + result);
+                // }
+                // console.log('3:' + this.name);
+                return;
+            }
+            // if (harvestResult < 0) {
+            //     console.log('Harvest Error: ' + this.name + ' : ' + harvestResult);
+            // }
+        }
+        else {
+            //console.log('No sources found: ' + this.name);
+        }
     }
 };

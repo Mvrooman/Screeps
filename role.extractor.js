@@ -19,6 +19,10 @@ var roleExtractor = {
             return;
         }
         else {
+            if(creep.memory.travelTime == undefined)
+            {
+                creep.memory.travelTime = 1500 - creep.ticksToLive;
+            }
             var closestSource = creep.pos.findClosestByRange(FIND_SOURCES);
             if (closestSource != undefined) {
                 var result = creep.harvest(closestSource);
