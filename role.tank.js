@@ -11,14 +11,18 @@ var roleTank = {
         if (creep.needsRecycled()) {
             return;
         }
+        // if (creep.needsRenew(200, 400)) {
+        //     return;
+        // }
 
         else {
-            var creepToHeal = creep.pos.findClosestByRange(FIND_CREEPS, {filter: (c) => c.hits < c.hitsMax});
+            var creepToHeal = creep.pos.findClosestByRange(FIND_MY_CREEPS, {filter: (c) => c.hits < c.hitsMax });
             if (creepToHeal != undefined && creep.getActiveBodyparts(HEAL) > 0) {
                 console.log('found creep to heal');
+                creep.rangedHeal(creepToHeal);
                 creep.heal(creepToHeal);
                 creep.moveTo(creepToHeal);
-                return;
+                //return;
             }
         }
         if (creep.hits < creep.hitsMax) {
@@ -44,6 +48,7 @@ var roleTank = {
             result = creep.dismantle(dismantleTarget[0]);
             //console.log('dismantle:' + result);
             if (result < 0) {
+                result = creep.dismantle(dismantleTarget[1]);
                 result = creep.moveTo(dismantleTarget[0]);
                 //console.log('Move result: ' + result)
             }
@@ -71,7 +76,7 @@ var roleTank = {
             //} return;
         }
         var closestHostile = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        if (closestHostile) {
+        if (closestHostile && creep.getActiveBodyparts(ATTACK) > 0) {
             if (creep.attack(closestHostile) < 0) {
                 creep.moveTo(closestHostile);
             }

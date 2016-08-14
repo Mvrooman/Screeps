@@ -89,6 +89,13 @@ Creep.prototype =
     name: "",
 
     /**
+     * The text message that the creep was saying at the last tick.
+     *
+     * @type {string}
+     */
+    saying: "",
+
+    /**
      * An object with the creep’s owner info
      *
      * @type {{username:string}}
@@ -383,18 +390,17 @@ Creep.prototype =
     reserveController: function(target) { },
 
     /**
-     * Display a visual speech balloon above the creep with the specified message.
-     * The message will disappear after a few seconds.
-     * Useful for debugging purposes.
-     * Only the creep's owner can see the speech message.
+     * Display a visual speech balloon above the creep with the specified message. The message will be
+     * available for one tick. You can read the last message using the saying property.
      *
      * @type {function}
      *
      * @param {string} message The message to be displayed. Maximum length is 10 characters.
+     * @param {boolean} [public] Set to true to allow other players to see this message. Default is false.
      *
      * @return {number|OK|ERR_NOT_OWNER|ERR_BUSY}
      */
-    say: function(message) { },
+    say: function(message, public) { },
 
     /**
      * Kill the creep immediately.
@@ -413,7 +419,7 @@ Creep.prototype =
      *
      * @param {Creep|Spawn|Structure} target The target object.
      * @param {string} resourceType One of the RESOURCE_* constants.
-     * @param {number} [amount] The amount of resources to be transferred. If omitted, all the available carried amount is used.
+     * @param {number|undefined|null} [amount] The amount of resources to be transferred. If omitted, all the available carried amount is used.
      *
      * @return {number|OK|ERR_NOT_OWNER|ERR_BUSY|ERR_NOT_ENOUGH_RESOURCES|ERR_INVALID_TARGET|ERR_FULL|ERR_NOT_IN_RANGE|ERR_INVALID_ARGS}
      */
@@ -434,5 +440,21 @@ Creep.prototype =
      *
      * @return {number|OK|ERR_NOT_OWNER|ERR_BUSY|ERR_NOT_ENOUGH_RESOURCES|ERR_INVALID_TARGET|ERR_NOT_IN_RANGE|ERR_NO_BODYPART}
      */
-    upgradeController: function(target) { }
+    upgradeController: function(target) { },
+
+    /**
+     * Withdraw resources from a structure.
+     * The target has to be at adjacent square to the creep.
+     * Multiple creeps can withdraw from the same structure in the same tick.
+     * Your creeps can withdraw resources from hostile structures as well, in case if there is no hostile rampart on top of it.
+     *
+     * @type {function}
+     *
+     * @param {Structure} target The target object.
+     * @param {string} resourceType One of the RESOURCE_* constants.
+     * @param {number|undefined|null} [amount] The amount of resources to be transferred. If omitted, all the available carried amount is used.
+     *
+     * @return {number|OK|ERR_NOT_OWNER|ERR_BUSY|ERR_NOT_ENOUGH_RESOURCES|ERR_INVALID_TARGET|ERR_FULL|ERR_NOT_IN_RANGE|ERR_INVALID_ARGS}
+     */
+    withdraw: function(target, resourceType, amount) { }
 };

@@ -5,10 +5,10 @@ var roleRepairer = {
         if (creep.needsRecycled()) {
             return;
         }
-        if (creep.needsRenew(500, 1400)) {
+        if (creep.needsRenew(200, 700)) {
             return;
         }
-        if(creep.traveling()){
+        if (creep.traveling()) {
             return;
         }
 
@@ -22,12 +22,13 @@ var roleRepairer = {
         if (creep.memory.repairing) {
             var structure = creep.pos.findClosestByRange(FIND_STRUCTURES,
                 {
-                    filter: (s) => s.hits <  Math.min(s.hitsMax,250000) * 0.8
-                    && (s.structureType != STRUCTURE_WALL || s.hits < 16000)
+                    filter: (s) => s.hits < Math.min(s.hitsMax, 200000) * 0.9
+                    && (s.structureType != STRUCTURE_WALL || s.hits < 2000)
+                    && creep.room.name == s.room.name
                 });
             if (structure != undefined) {
                 if (creep.repair(structure) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(structure);
+                    creep.moveTo(structure, {maxRooms: 1, reusePath: 20});
                     creep.repair(structure)
                 }
             }

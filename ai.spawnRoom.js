@@ -86,7 +86,7 @@ var aiSpawnRoom = {
                 role: 'hauler',
                 dropRoomName: 'E46N38',
                 pickupRoomName: 'E46N37',
-                count: 4
+                count: 2
             });
             roomRole4.roles.push({
                 role: 'repairer',
@@ -319,7 +319,7 @@ var aiSpawnRoom = {
                 case 'hauler':
                     var result = Game.spawns.HomeSpawn.createCreep([CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, WORK], {
                         role: 'hauler',
-                        pickupRoomName: roomName,
+                        pickupRoomName: role.pickupRoomName,
                         dropRoomName: role.dropRoomName,
                         destination: Game.flags[roomName].pos
                     });

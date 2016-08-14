@@ -12,6 +12,7 @@ var roleTank = require('role.tank');
 
 var aiSpawnRoom = require('ai.spawnRoom');
 var aiSpawnEmpire = require('ai.spawnEmpire');
+var aiTower = require('ai.tower');
 
 
 var aiRenew = require('ai.renew');
@@ -27,7 +28,7 @@ require('Empire');
 // profiler.enable();
 module.exports.loop = function () {
     //PathFinder.use(true);
-    //  profiler.wrap(function () {
+    // profiler.wrap(function () {
     for (var name in Memory.creeps) {
         if (!Game.creeps[name]) {
             delete Memory.creeps[name];
@@ -43,78 +44,13 @@ module.exports.loop = function () {
 
 // console.log("    <iframe src='http://localhost/api/values' style='visibility:hidden' width='0' height='0'>");
     aiRenew.run();
-    aiSpawnEmpire.run();
+    aiTower.run();
+    if (Game.time % 4 == 0)
+        aiSpawnEmpire.run();
 //    aiSpawnRoom.run();
     aiLink.run();
-
-
-    var tower = Game.spawns.HomeSpawn.pos.findClosestByRange(FIND_MY_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_TOWER && s.energy > 10});
-    if (tower) {
-        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        if (closestHostile) {
-            tower.attack(closestHostile);
-        }
-        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_SPAWNS);
-        if (closestHostile) {
-            tower.attack(closestHostile);
-        }
-        var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (structure) => structure.hitsMax > 1 && structure.hits < 1000
-        });
-        // &&                (structure.structureType == STRUCTURE_RAMPART
-        // || structure.structureType == STRUCTURE_WALL||structure.structureType == STRUCTURE_ROAD
-
-        if (closestDamagedStructure) {
-            console.log('repair tower:' + closestDamagedStructure.pos)
-            tower.repair(closestDamagedStructure);
-        }
-
-
-    }
-
-    var tower = Game.spawns.TwoSpawn.pos.findClosestByRange(FIND_MY_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_TOWER});
-    if (tower) {
-        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        if (closestHostile) {
-            tower.attack(closestHostile);
-        }
-        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_SPAWNS);
-        if (closestHostile) {
-            tower.attack(closestHostile);
-        }
-        var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (structure) => structure.hitsMax > 1 && structure.hits < 1000
-
-            })
-            ;
-        if (closestDamagedStructure) {
-            console.log('repair tower:' + closestDamagedStructure.pos);
-            tower.repair(closestDamagedStructure);
-        }
-
-
-    }
-
-    var tower = Game.spawns.SpawnThree.pos.findClosestByRange(FIND_MY_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_TOWER});
-    if (tower) {
-        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        if (closestHostile) {
-            tower.attack(closestHostile);
-        }
-        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_SPAWNS);
-        if (closestHostile) {
-            tower.attack(closestHostile);
-        }
-        var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (structure) => structure.hitsMax > 1 && structure.hits < 1000
-        });
-        if (closestDamagedStructure) {
-            console.log('repair tower:' + closestDamagedStructure.pos)
-            tower.repair(closestDamagedStructure);
-        }
-
-
-    }
+//Game.rooms['E47N37'].terminal.send(RESOURCE_ENERGY,240000,'E46N38')
+    //Game.rooms['E47N37'].terminal.send(RESOURCE_ENERGY,200000,'E48N36')
 
     for (var name in Game.creeps) {
         var creep = Game.creeps[name];
@@ -122,6 +58,16 @@ module.exports.loop = function () {
             roleHarvester.run(creep);
         }
         else if (creep.memory.role == 'upgrader') {
+            if (creep.pos.roomName == 'E49N40')
+                creep.gotoRoom('E41N40')
+            if (creep.pos.roomName == 'E41N40')
+                creep.gotoRoom('E40N39')
+            if (creep.pos.roomName == 'E40N39')
+                creep.gotoRoom('E40N35')
+            if (creep.pos.roomName == 'E40N35')
+                creep.gotoRoom('E42N34')
+            if (creep.pos.roomName == 'E42N34')
+                creep.gotoRoom('C6')
             roleUpgrader.run(creep);
         }
         else if (creep.memory.role == 'builder') {
@@ -140,21 +86,23 @@ module.exports.loop = function () {
             roleReserver.run(creep);
         }
 
-        else if (creep.memory.role == 'tank' || creep.memory.role == 'pause') {
+        else if (creep.memory.role == 'tank') {
 
-            if(creep.pos.roomName.startsWith('E46') ) {
-               // creep.memory.role = 'pause'
-               //creep.gotoRoom('E46N39');
-               //creep.gotoRoom('E46N40');
+            if (creep.pos.roomName.startsWith('E44N37')
+            //  || creep.pos.roomName.startsWith('E46N39')
+            ) {
+                //  creep.pos.roomName.startsWith('E44N3') ||
+
+                // creep.memory.role = 'pause'
+             //   creep.gotoRoom('E44N38');
+                //creep.gotoRoom('E46N40');
+
             }
-            if(creep.pos.roomName.startsWith('E47N37')) {
-                creep.gotoRoom('E49N39');
+
+            if (creep.pos.roomName == 'E44N38') {
+              //  creep.gotoRoom('E44N37');
             }
-            if(creep.pos.roomName=='E49N39')
-            {
-                creep.gotoRoom('E46N40');
-            }
-            console.log(creep.pos.roomName);
+            //  console.log(creep.pos.roomName);
             roleTank.run(creep);
 
             // creep.memory.destination = Game.flags['E47N37_G'].pos;
@@ -164,16 +112,34 @@ module.exports.loop = function () {
             roleStructureAttack.run(creep);
         }
         else if (creep.memory.role == 'attackCreep') {
+            //  creep.gotoRoom('E49N39');
+            //  if (creep.pos.roomName.startsWith('E46N40') ||
+            //      creep.pos.roomName.startsWith('E46N39') ||
+            //      creep.pos.roomName.startsWith('E48N40')) {
+            //      creep.memory.role = 'pause'
+            //      creep.gotoRoom('E46N39');
+            //      creep.gotoRoom('E46N40');
+            //  }
+            // if(creep.pos.roomName.startsWith('E47N37')) {
+            //     creep.gotoRoom('E49N39');
+            // }
+
+            // if (creep.pos.roomName == 'E49N39') {
+            //     creep.gotoRoom('E46N40');
+            // }
+
+            // console.log(creep.pos.roomName);
             roleCreepAttack.run(creep);
 //            creep.memory.recycle = true;
 
             //creep.memory.destination = Game.flags['E47N37_G'].pos;
         } else if (creep.memory.role == 'hauler') {
+
             roleHauler.run(creep);
         }
     }
-    // });
-    console.log(Game.cpu.getUsed())
+    //  });
+    console.log(Game.cpu.getUsed());
     return;
     // var room = Game.rooms['E47N37'];
     // var extensions = Game.rooms['E47N37'].find(FIND_MY_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_EXTENSION});
@@ -185,5 +151,5 @@ module.exports.loop = function () {
     //
     //     }
     //
-    // }
+    //}
 }

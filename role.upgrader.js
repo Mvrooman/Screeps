@@ -15,9 +15,8 @@ var roleUpgrader = {
         }
 
 
-
-        if (creep.room.find(FIND_CONSTRUCTION_SITES).length > 0) {
-            console.log('Upgrader -> Builder');
+        if (creep.room.find(FIND_CONSTRUCTION_SITES).length > 0 && !creep.memory.manual) {
+            console.log('Upgrader -> Builder ' + creep.room.name);
             creep.memory.role = 'builder'
             creep.memory.building = true;
             return;
@@ -30,8 +29,16 @@ var roleUpgrader = {
             creep.memory.upgrading = true;
         }
         if (creep.memory.upgrading) {
-            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(creep.room.controller);
+            var result = creep.upgradeController(creep.room.controller);
+            if (result == ERR_NOT_IN_RANGE) {
+                creep.moveTo(creep.room.controller,{reusePath:5});
+            }
+            if (result != OK && result != ERR_NOT_IN_RANGE) {
+                console.log("Upgrade error: " + result + " " + creep.room.name);
+                if(result == ERR_NOT_OWNER)
+                {
+                   // creep.memory.role='repairer';
+                }
             }
         }
         else {

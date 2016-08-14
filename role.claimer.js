@@ -2,6 +2,7 @@ var roleClaimer = {
 
     /** @param {Creep} creep **/
     run: function (creep) {
+        console.log(creep.pos.roomName);
         if (creep.needsRecycled()) {
             return;
         }
