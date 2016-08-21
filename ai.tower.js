@@ -7,6 +7,12 @@ var aiTower = {
         });
         for (let i in towers) {
             let tower = towers[i]
+
+            var creep = tower.pos.findClosestByRange(FIND_MY_CREEPS,{filter: (c) => c.hits < c.hitsMax});
+            {
+                tower.heal(creep)
+            }
+
             var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
             if (closestHostile) {
                 tower.attack(closestHostile);
@@ -16,7 +22,7 @@ var aiTower = {
                 tower.attack(closestHostile);
             }
             var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (structure) => structure.hitsMax > 1 && structure.hits < 500
+                filter: (structure) => structure.hitsMax > 1 && structure.hits < 500 && s.structureType != STRUCTURE_ROAD
             });
 
             if (closestDamagedStructure) {
@@ -24,10 +30,7 @@ var aiTower = {
                 tower.repair(closestDamagedStructure);
             }
 
-            var creep = tower.pos.findClosestByRange(FIND_MY_CREEPS,{filter: (c) => c.hits < c.hitsMax});
-            {
-                tower.heal(creep)
-            }
+
 
         }
     }

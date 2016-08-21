@@ -31,13 +31,17 @@ var roleUpgrader = {
         if (creep.memory.upgrading) {
             var result = creep.upgradeController(creep.room.controller);
             if (result == ERR_NOT_IN_RANGE) {
-                creep.moveTo(creep.room.controller,{reusePath:5});
+                if (Memory.kernal.pathFinding) {
+                    creep.moveTo(creep.room.controller, {reusePath: 5, swampCost: 1});
+                }
+                else {
+                    creep.moveTo(creep.room.controller, {reusePath: 5});
+                }
             }
             if (result != OK && result != ERR_NOT_IN_RANGE) {
                 console.log("Upgrade error: " + result + " " + creep.room.name);
-                if(result == ERR_NOT_OWNER)
-                {
-                   // creep.memory.role='repairer';
+                if (result == ERR_NOT_OWNER) {
+                    // creep.memory.role='repairer';
                 }
             }
         }

@@ -3,7 +3,7 @@ var roleHarvester = {
     /** @param {Creep} creep **/
     run: function (creep) {
         if (creep.needsRecycled()) {
-            return;
+            //return;
         }
         if (creep.needsRenew(500, 800)) {
             return;
@@ -27,7 +27,7 @@ var roleHarvester = {
             // creep.getNearestEnergy();
             // return;
             var closestLink = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                filter: (s) => s.structureType == STRUCTURE_LINK && s.energy > 0 && s.pos.roomName == creep.pos.roomName && s.pos.inRangeTo(creep.room.controller.pos, 10)
+                filter: (s) => s.structureType == STRUCTURE_LINK && s.energy > 0 && s.pos.roomName == creep.pos.roomName && s.pos.inRangeTo(creep.room.controller.pos, 10)&& s.pos.inRangeTo(creep.pos, 15)
             });
             if (closestLink != undefined) {
                 if (closestLink.transferEnergy(creep) == ERR_NOT_IN_RANGE) {
@@ -48,7 +48,7 @@ var roleHarvester = {
                 {
                     filter: (s) => ((s.structureType == STRUCTURE_CONTAINER && s.pos.findInRange(FIND_SOURCES, 1).length > 0)) &&
                     //|| s.structureType == STRUCTURE_STORAGE || s.structureType == STRUCTURE_TERMINAL) &&
-                    s.store[RESOURCE_ENERGY] > 200 &&
+                    s.store[RESOURCE_ENERGY] > 600 &&
                     s.pos.roomName == creep.pos.roomName
                     //&&                    s.pos.findInRange(FIND_SOURCES, 1).length > 0
                 });
@@ -64,10 +64,10 @@ var roleHarvester = {
             }
 
             if (closestEnergy != undefined) {
-                if (closestEnergy.amount > 1500) {
+                if (closestEnergy.amount > 100) {
                     console.log('large energy drop warning (' + closestEnergy.amount + '): ' + creep.room.name)
                 }
-                if (closestEnergy.amount > 800 || closestContainer == undefined ||
+                if (closestEnergy.amount > 100 || closestContainer == undefined ||
                     creep.pos.getRangeTo(closestEnergy.pos.x, closestEnergy.pos.y) <= creep.pos.getRangeTo(closestContainer.pos.x, closestContainer.pos.y)) {
                     var result1;
                     if (closestContainer != undefined && closestEnergy.pos.inRangeTo(closestContainer, 0)) {
@@ -120,7 +120,7 @@ var roleHarvester = {
                 return;
             }
 
-            var closestSource = creep.pos.findClosestByRange(FIND_SOURCES, {filter: (s) => s.energy > 0});
+            var closestSource = creep.pos.findClosestByPath(FIND_SOURCES, {filter: (s) => s.energy > 0});
             if (closestSource != undefined) {
                 var harvestResult = creep.harvest(closestSource);
                 if (harvestResult == ERR_NOT_IN_RANGE) {

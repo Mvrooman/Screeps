@@ -22,9 +22,11 @@ var roleRepairer = {
         if (creep.memory.repairing) {
             var structure = creep.pos.findClosestByRange(FIND_STRUCTURES,
                 {
-                    filter: (s) => s.hits < Math.min(s.hitsMax, 200000) * 0.9
-                    && (s.structureType != STRUCTURE_WALL || s.hits < 2000)
+                    filter: (s) => s.hits < Math.min(s.hitsMax, 200000) * 0.8
+                    && (s.structureType != STRUCTURE_WALL || s.hits < 360000)
+                    && (s.structureType != STRUCTURE_RAMPART || s.hits < 300000)
                     && creep.room.name == s.room.name
+                    && s.structureType != STRUCTURE_ROAD
                 });
             if (structure != undefined) {
                 if (creep.repair(structure) == ERR_NOT_IN_RANGE) {

@@ -13,6 +13,7 @@ var roleTank = require('role.tank');
 var aiSpawnRoom = require('ai.spawnRoom');
 var aiSpawnEmpire = require('ai.spawnEmpire');
 var aiTower = require('ai.tower');
+var aiRoad = require('ai.road');
 
 
 var aiRenew = require('ai.renew');
@@ -21,6 +22,8 @@ var aiLink = require('ai.link');
 require('prototype.spawn')();
 require('prototype.creep')();
 require('prototype.string')();
+require('prototype.roomPosition')();
+
 
 require('Empire');
 
@@ -43,31 +46,53 @@ module.exports.loop = function () {
     }
 
 // console.log("    <iframe src='http://localhost/api/values' style='visibility:hidden' width='0' height='0'>");
+    aiRoad.run();
     aiRenew.run();
     aiTower.run();
     if (Game.time % 4 == 0)
         aiSpawnEmpire.run();
+    if (Game.time % 100 == 0) {
+        Empire.calculateRoomPaths();
+
+    }
+    for (let s in Game.spawns) {
+        let spawn = Game.spawns[s];
+        if (!spawn.spawning) {
+            if (!Memory.kernal.spawns[spawn.name]) {
+                Memory.kernal.spawns[spawn.name] = 1;
+            }
+            else {
+                Memory.kernal.spawns[spawn.name]++;
+            }
+        }
+    }
+
+
 //    aiSpawnRoom.run();
     aiLink.run();
 //Game.rooms['E47N37'].terminal.send(RESOURCE_ENERGY,240000,'E46N38')
     //Game.rooms['E47N37'].terminal.send(RESOURCE_ENERGY,200000,'E48N36')
+    console.log('Workers:' + _.sum(Game.creeps, c=>(c.memory.role == 'tank' || c.memory.role == 'builder') && c.getActiveBodyparts(TOUGH) > 0 && c.pos.roomName=='W32S51'));
 
     for (var name in Game.creeps) {
         var creep = Game.creeps[name];
+        if (false) {
+
+            if (creep.memory.role == 'upgrader') {
+                creep.gotoRoom('2')
+                creep.memory.role = 'tank';
+                creep.drop(RESOURCE_ENERGY);
+            }
+            if (creep.memory.role == 'builder') {
+                creep.gotoRoom('1')
+                creep.memory.role = 'tank';
+                creep.drop(RESOURCE_ENERGY);
+            }
+        }
         if (creep.memory.role == 'harvester') {
             roleHarvester.run(creep);
         }
         else if (creep.memory.role == 'upgrader') {
-            if (creep.pos.roomName == 'E49N40')
-                creep.gotoRoom('E41N40')
-            if (creep.pos.roomName == 'E41N40')
-                creep.gotoRoom('E40N39')
-            if (creep.pos.roomName == 'E40N39')
-                creep.gotoRoom('E40N35')
-            if (creep.pos.roomName == 'E40N35')
-                creep.gotoRoom('E42N34')
-            if (creep.pos.roomName == 'E42N34')
-                creep.gotoRoom('C6')
             roleUpgrader.run(creep);
         }
         else if (creep.memory.role == 'builder') {
@@ -87,20 +112,30 @@ module.exports.loop = function () {
         }
 
         else if (creep.memory.role == 'tank') {
+            if (false) {
+                creep.gotoRoom('Dismantle1')
+            }
+            if (false) {
+                creep.gotoRoom('2')
+            }
 
+            if(false && creep.pos.roomName=='W32S51')
+            {
+                creep.gotoRoom('2')
+            }
             if (creep.pos.roomName.startsWith('E44N37')
             //  || creep.pos.roomName.startsWith('E46N39')
             ) {
                 //  creep.pos.roomName.startsWith('E44N3') ||
 
                 // creep.memory.role = 'pause'
-             //   creep.gotoRoom('E44N38');
+                //   creep.gotoRoom('E44N38');
                 //creep.gotoRoom('E46N40');
 
             }
 
             if (creep.pos.roomName == 'E44N38') {
-              //  creep.gotoRoom('E44N37');
+                //  creep.gotoRoom('E44N37');
             }
             //  console.log(creep.pos.roomName);
             roleTank.run(creep);

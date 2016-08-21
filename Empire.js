@@ -3,7 +3,7 @@ Empire = {
     roomSpawns: [],
     calculateRoomPaths: function () {
         let roomNames = _.uniq(_.map(this.roomSpawns, (r) => r.roomName));
-        console.log(JSON.stringify(roomNames));
+        console.log('Rooms: ' + JSON.stringify(roomNames));
         Memory.kernal.closestSpawns = {};
 
         for (let i in roomNames) {
@@ -16,8 +16,7 @@ Empire = {
         }
     },
     spawnForRoom: function (spawn) {
-        if(!spawn)
-        {
+        if (!spawn) {
             console.log('Bad Spawn');
             return;
         }
@@ -26,16 +25,23 @@ Empire = {
         if (availableSpawn) {
             return Game.spawns[availableSpawn.spawnName];
         }
+    },
+
+    trackFatigue: function (pos) {
+        // Game.flags[pos.]
+    },
+    idleSpawns: function () {
+        let ticks = Game.time - Memory.kernal.spawnStart;
+        for (let s in Game.spawns) {
+            let spawn = Game.spawns[s];
+            console.log(spawn.name + " : " + Memory.kernal.spawns[spawn.name] / ticks * 100 + '%');
+        }
     }
 }
 
-require('E47N37_HomeSpawn')();
-require('E48N36_TwoSpawn')();
-require('E46N38_SpawnThree')();
-require('E48N39_FourSpawn')();
-require('E47N35_FiveSpawn')();
-require('E43N34_SixSpawn')();
-
+require('W34S51_HomeSpawn')();
+require('W32S52_TwoSpawn')();
+require('W31S53_ThreeSpawn')();
 
 
 module.exports = Empire;

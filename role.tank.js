@@ -48,8 +48,10 @@ var roleTank = {
             result = creep.dismantle(dismantleTarget[0]);
             //console.log('dismantle:' + result);
             if (result < 0) {
-                result = creep.dismantle(dismantleTarget[1]);
                 result = creep.moveTo(dismantleTarget[0]);
+                result = creep.dismantle(dismantleTarget[0]);
+                result = creep.dismantle(dismantleTarget[1]);
+
                 //console.log('Move result: ' + result)
             }
             //creep.dismantle(dismantleTarget[0])

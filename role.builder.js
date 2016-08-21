@@ -12,9 +12,8 @@ var roleBuilder = {
         if (creep.traveling()) {
             return;
         }
-        if(creep.pos.roomName=='E43N34')
-        {
-          //  creep.memory.destination = undefined;
+        if (creep.pos.roomName == 'E43N34') {
+            //  creep.memory.destination = undefined;
             // creep.memory.destination=undefined;
             // creep.drop(RESOURCE_ENERGY);
             //creep.gotoRoom('C6');
@@ -32,7 +31,12 @@ var roleBuilder = {
             var closestSite = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES);
             if (closestSite != undefined) {
                 if (creep.build(closestSite) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(closestSite, {maxRooms: 1,reusePath: 50});
+                    if (Memory.kernal.pathFinding) {
+                        creep.moveTo(closestSite, {reusePath: 5, swampCost: 1});
+                    }
+                    else {
+                        creep.moveTo(closestSite, {reusePath: 5});
+                    }
                 }
                 creep.build(closestSite);
             }
