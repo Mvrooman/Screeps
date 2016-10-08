@@ -22,9 +22,9 @@ var roleHauler = {
         if (creep.needsRecycled()) {
             return;
         }
-         // if (creep.needsRenew(200, 400)) {
-         //     return;
-         // }
+         if (creep.needsRenew(200, 900)) {
+             return;
+         }
         if (creep.traveling()) {
             return;
         }

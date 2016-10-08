@@ -8,7 +8,7 @@ var roleExtractor = {
         if (creep.needsRenew(100, 1400)) {
             return;
         }
-        if (creep.memory.stuck && creep.traveling()) {
+        if ((creep.memory.stuck || (creep.memory.waypoint && creep.memory.waypoint.length > 0) ) && creep.traveling()) {
             return;
         }
 
@@ -25,7 +25,7 @@ var roleExtractor = {
             creep.say('-> Source');
             creep.checkRoads();
             if (Memory.kernal.pathFinding) {
-                creep.moveTo(sourcePosition, {reusePath: 5, swampCost: 1, });
+                creep.moveTo(sourcePosition, {reusePath: 5, swampCost: 1,});
             }
             else {
                 creep.moveTo(sourcePosition, {reusePath: 20});
@@ -61,9 +61,14 @@ var roleExtractor = {
                     creep.harvest(closestSource);
                 }
                 else if (result == OK && _.sum(creep.carry) > 40) {
-                    var closestSite = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES);
-                    if (closestSite != undefined) {
-                        creep.build(closestSite);
+                    // var container = creep.room.find(FIND_STRUCTURES, {filter: (s)=> s.pos.x == creep.pos.x && s.pos.y == creep.pos.y && s.structureType == STRUCTURE_STORAGE});
+                    // if(container.length==0)
+                    // {
+                    //     creep.room.createConstructionSite(creep.pos, STRUCTURE_CONTAINER)
+                    // }
+                    var closestSites = creep.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 3);
+                    if (closestSites.length > 0) {
+                        creep.build(closestSites[0]);
                     }
                 }
             }

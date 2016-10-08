@@ -2,16 +2,38 @@ var roleBuilder = {
 
     /** @param {Creep} creep **/
     run: function (creep) {
-        //creep.say('B');
+
+        if (creep.memory.firstSpawn == undefined) {
+            creep.memory.firstSpawn = true;
+        }
+        if (creep.carry.energy == creep.carryCapacity) {
+            creep.memory.firstSpawn = false;
+        }
+        if (creep.memory.firstSpawn && creep.carry.energy != creep.carryCapacity) {
+            creep.getNearestEnergy();
+            return;
+        }
+        if (creep.carry.energy > 100
+            //&& creep.memory.building
+        ) {
+            var closestSites = creep.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 3);
+            if (closestSites && closestSites.length > 0) {
+                var result = creep.build(closestSites[0]);
+            }
+        }
+
+
         if (creep.needsRecycled()) {
             return;
         }
-        if (creep.needsRenew(200, 800)) {
+
+        if (creep.needsRenew(200, 1400)) {
             return;
         }
         if (creep.traveling()) {
             return;
         }
+        creep.firstSpawn = false;
         if (creep.pos.roomName == 'E43N34') {
             //  creep.memory.destination = undefined;
             // creep.memory.destination=undefined;
@@ -32,10 +54,10 @@ var roleBuilder = {
             if (closestSite != undefined) {
                 if (creep.build(closestSite) == ERR_NOT_IN_RANGE) {
                     if (Memory.kernal.pathFinding) {
-                        creep.moveTo(closestSite, {reusePath: 5, swampCost: 1});
+                        creep.moveTo(closestSite, {reusePath: 5, swampCost: 1, costCallback: Empire.stayInRoom});
                     }
                     else {
-                        creep.moveTo(closestSite, {reusePath: 5});
+                        creep.moveTo(closestSite, {reusePath: 5, costCallback: Empire.stayInRoom});
                     }
                 }
                 creep.build(closestSite);

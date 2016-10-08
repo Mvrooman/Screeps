@@ -10,7 +10,7 @@ var roleUpgrader = {
         if (creep.needsRecycled()) {
             return;
         }
-        if (creep.needsRenew(500, 1400)) {
+        if (creep.needsRenew(500, 1000)) {
             return;
         }
 
@@ -30,14 +30,14 @@ var roleUpgrader = {
         }
         if (creep.memory.upgrading) {
             var result = creep.upgradeController(creep.room.controller);
-            if (result == ERR_NOT_IN_RANGE) {
+           // if (result == ERR_NOT_IN_RANGE) {
                 if (Memory.kernal.pathFinding) {
-                    creep.moveTo(creep.room.controller, {reusePath: 5, swampCost: 1});
+                    creep.moveTo(creep.room.controller, {reusePath: 5, swampCost: 1, costCallback: Empire.stayInRoom});
                 }
                 else {
-                    creep.moveTo(creep.room.controller, {reusePath: 5});
+                    creep.moveTo(creep.room.controller, {reusePath: 5, costCallback: Empire.stayInRoom});
                 }
-            }
+          //  }
             if (result != OK && result != ERR_NOT_IN_RANGE) {
                 console.log("Upgrade error: " + result + " " + creep.room.name);
                 if (result == ERR_NOT_OWNER) {

@@ -5,11 +5,13 @@ var aiRenew = {
             for (var name in Game.creeps) {
                 var creep = Game.creeps[name];
                 if (creep.memory.recycle) {
-                    spawn.recycleCreep(creep);
+                  spawn.recycleCreep(creep);
                 }
-                else if (creep.memory.renewing) {
+                else if (creep.room.name == spawn.room.name && creep.memory.renewing) {
                     creep.transfer(spawn, RESOURCE_ENERGY)
-                    spawn.renewCreep(creep);
+                    var result =   spawn.renewCreep(creep);
+                    console.log('Renew: '+result);
+
                     if (spawn.room.energyAvailable < 10 && creep.ticksToLive > 800) {
                         creep.memory.renewing = false;
                     }

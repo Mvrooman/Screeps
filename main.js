@@ -9,6 +9,9 @@ var roleHauler = require('role.hauler');
 var roleStructureAttack = require('role.structureAttack');
 var roleCreepAttack = require('role.creepAttack');
 var roleTank = require('role.tank');
+var roleMiner = require('role.miner');
+var roleCollector = require('role.collector');
+
 
 var aiSpawnRoom = require('ai.spawnRoom');
 var aiSpawnEmpire = require('ai.spawnEmpire');
@@ -26,10 +29,10 @@ require('prototype.roomPosition')();
 
 
 require('Empire');
-
-// var profiler = require('screeps-profiler');
-// profiler.enable();
+//var profiler = require('screeps-profiler');
+//profiler.enable();
 module.exports.loop = function () {
+//return;
     //PathFinder.use(true);
     // profiler.wrap(function () {
     for (var name in Memory.creeps) {
@@ -44,17 +47,38 @@ module.exports.loop = function () {
             console.log('Clearing non-existing flag memory:', name);
         }
     }
-
-// console.log("    <iframe src='http://localhost/api/values' style='visibility:hidden' width='0' height='0'>");
-    aiRoad.run();
-    aiRenew.run();
-    aiTower.run();
-    if (Game.time % 4 == 0)
-        aiSpawnEmpire.run();
-    if (Game.time % 100 == 0) {
+    if (Game.time % 1000 == 0) {
         Empire.calculateRoomPaths();
 
     }
+
+    if (false
+    ) {
+        var flags = _.filter(Game.flags, f=> f.name.startsWith("_"));
+        _.forEach(flags, (f) => {
+            f.remove();
+
+        });
+    }
+
+    if (false) {
+        var constructionSites = _.filter(Game.constructionSites, c => c.progress == 0);
+        _.forEach(constructionSites, (f) => {
+            f.remove();
+
+        });
+        console.log('SITES!!!!!!!!!' + constructionSites.length)
+    }
+
+
+// console.log("    <iframe src='http://localhost/api/values' style='visibility:hidden' width='0' height='0'>");
+    Empire.claimedEnergy = {};
+    aiRoad.run();
+    aiRenew.run();
+    aiTower.run();
+    if (Game.time % 10 == 0)
+        aiSpawnEmpire.run();
+
     for (let s in Game.spawns) {
         let spawn = Game.spawns[s];
         if (!spawn.spawning) {
@@ -70,32 +94,38 @@ module.exports.loop = function () {
 
 //    aiSpawnRoom.run();
     aiLink.run();
-//Game.rooms['E47N37'].terminal.send(RESOURCE_ENERGY,240000,'E46N38')
+//Game.rooms['W32S52'].terminal.send(RESOURCE_ENERGY,150000,'W33S55')
+    //Game.rooms['W31S53'].terminal.send(RESOURCE_ENERGY,150000,'W33S55')
     //Game.rooms['E47N37'].terminal.send(RESOURCE_ENERGY,200000,'E48N36')
-    console.log('Workers:' + _.sum(Game.creeps, c=>(c.memory.role == 'tank' || c.memory.role == 'builder') && c.getActiveBodyparts(TOUGH) > 0 && c.pos.roomName=='W32S51'));
+    console.log('Workers:' + _.sum(Game.creeps, c=>(c.memory.role == 'tank' || c.memory.role == 'builder') && c.getActiveBodyparts(TOUGH) > 0 && c.pos.roomName == 'W32S51'));
 
     for (var name in Game.creeps) {
         var creep = Game.creeps[name];
-        if (false) {
 
-            if (creep.memory.role == 'upgrader') {
-                creep.gotoRoom('2')
-                creep.memory.role = 'tank';
-                creep.drop(RESOURCE_ENERGY);
-            }
-            if (creep.memory.role == 'builder') {
-                creep.gotoRoom('1')
-                creep.memory.role = 'tank';
-                creep.drop(RESOURCE_ENERGY);
-            }
-        }
+
+
+
+            // if (creep.room.name == 'W27S60') {
+            //        creep.gotoRoom('W28S58')
+            //     //creep.gotoRoom('AA')
+            //     //  creep.memory.destination=undefined;
+            // }
+
+
+
         if (creep.memory.role == 'harvester') {
             roleHarvester.run(creep);
         }
+        if (creep.memory.role == 'miner') {
+            roleMiner.run(creep);
+        }
         else if (creep.memory.role == 'upgrader') {
+
             roleUpgrader.run(creep);
         }
         else if (creep.memory.role == 'builder') {
+
+
             roleBuilder.run(creep);
         }
         else if (creep.memory.role == 'repairer') {
@@ -105,39 +135,24 @@ module.exports.loop = function () {
             roleExtractor.run(creep);
         }
         else if (creep.memory.role == 'claimer') {
+            console.log('Claimer :' + creep.room.name + ' ' + creep.name);
             roleClaimer.run(creep);
         }
         else if (creep.memory.role == 'reserver') {
             roleReserver.run(creep);
         }
-
+        else if (creep.memory.role == 'collector') {
+            roleCollector.run(creep);
+        }
         else if (creep.memory.role == 'tank') {
+
             if (false) {
-                creep.gotoRoom('Dismantle1')
+                creep.gotoRoom('E39S54')
             }
-            if (false) {
+            if (false && creep.pos.roomName == 'W32S51') {
                 creep.gotoRoom('2')
             }
 
-            if(false && creep.pos.roomName=='W32S51')
-            {
-                creep.gotoRoom('2')
-            }
-            if (creep.pos.roomName.startsWith('E44N37')
-            //  || creep.pos.roomName.startsWith('E46N39')
-            ) {
-                //  creep.pos.roomName.startsWith('E44N3') ||
-
-                // creep.memory.role = 'pause'
-                //   creep.gotoRoom('E44N38');
-                //creep.gotoRoom('E46N40');
-
-            }
-
-            if (creep.pos.roomName == 'E44N38') {
-                //  creep.gotoRoom('E44N37');
-            }
-            //  console.log(creep.pos.roomName);
             roleTank.run(creep);
 
             // creep.memory.destination = Game.flags['E47N37_G'].pos;
@@ -173,7 +188,7 @@ module.exports.loop = function () {
             roleHauler.run(creep);
         }
     }
-    //  });
+    //    });
     console.log(Game.cpu.getUsed());
     return;
     // var room = Game.rooms['E47N37'];

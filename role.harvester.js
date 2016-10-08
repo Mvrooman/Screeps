@@ -12,13 +12,19 @@ var roleHarvester = {
             return;
         }
 
+        if(_.sum(creep.carry) != creep.carry[RESOURCE_ENERGY])
+        {
+            creep.memory.role='collector';
+            return;
+        }
+
         if (creep.memory.harvesting == undefined) {
             creep.memory.harvesting = true;
         }
-        if (creep.memory.harvesting && creep.carry.energy == creep.carryCapacity) {
+        if (creep.memory.harvesting && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.harvesting = false;
         }
-        if (!creep.memory.harvesting && creep.carry.energy == 0) {
+        if (!creep.memory.harvesting &&  _.sum(creep.carry) == 0) {
             creep.memory.harvesting = true;
         }
         if (creep.memory.harvesting) {
@@ -27,17 +33,19 @@ var roleHarvester = {
             // creep.getNearestEnergy();
             // return;
             var closestLink = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                filter: (s) => s.structureType == STRUCTURE_LINK && s.energy > 0 && s.pos.roomName == creep.pos.roomName && s.pos.inRangeTo(creep.room.controller.pos, 10)&& s.pos.inRangeTo(creep.pos, 15)
+                filter: (s) => s.structureType == STRUCTURE_LINK && s.energy > 0 && s.pos.roomName == creep.pos.roomName && s.pos.inRangeTo(creep.room.controller.pos, 10) && s.pos.inRangeTo(creep.pos, 15)
             });
             if (closestLink != undefined) {
                 if (closestLink.transferEnergy(creep) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(closestLink, {maxRooms: 1, reusePath: 20});
                     closestLink.transferEnergy(creep)
                 }
-                return;
+
+              //  return;
             }
 
             var closestEnergy = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY, {filter: (s) => s.room == creep.room && s.amount >= 100});
+
             // var closestContainer = this.pos.findClosestByRange(FIND_STRUCTURES,
             //     {
             //         filter: (s) => (s.structureType == STRUCTURE_CONTAINER || s.structureType == STRUCTURE_STORAGE || s.structureType == STRUCTURE_TERMINAL) &&
@@ -46,7 +54,9 @@ var roleHarvester = {
             //     });
             var closestContainer = creep.pos.findClosestByRange(FIND_STRUCTURES,
                 {
-                    filter: (s) => ((s.structureType == STRUCTURE_CONTAINER && s.pos.findInRange(FIND_SOURCES, 1).length > 0)) &&
+                    filter: (s) => ((s.structureType == STRUCTURE_CONTAINER
+                    && s.pos.findInRange(FIND_SOURCES, 1).length > 0
+                    )) &&
                     //|| s.structureType == STRUCTURE_STORAGE || s.structureType == STRUCTURE_TERMINAL) &&
                     s.store[RESOURCE_ENERGY] > 600 &&
                     s.pos.roomName == creep.pos.roomName
@@ -64,6 +74,8 @@ var roleHarvester = {
             }
 
             if (closestEnergy != undefined) {
+                creep.say('Energy!');
+                //console.log('Energy!')
                 if (closestEnergy.amount > 100) {
                     console.log('large energy drop warning (' + closestEnergy.amount + '): ' + creep.room.name)
                 }
@@ -120,7 +132,7 @@ var roleHarvester = {
                 return;
             }
 
-            var closestSource = creep.pos.findClosestByPath(FIND_SOURCES, {filter: (s) => s.energy > 0});
+            var closestSource = creep.pos.findClosestByRange(FIND_SOURCES, {filter: (s) => s.energy > 0  && s.room.name == creep.pos.roomName});
             if (closestSource != undefined) {
                 var harvestResult = creep.harvest(closestSource);
                 if (harvestResult == ERR_NOT_IN_RANGE) {
@@ -143,7 +155,7 @@ var roleHarvester = {
         else {
 
             var closestStructure = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                filter: (s) => s.energy < s.energyCapacity && s.structureType != STRUCTURE_LINK
+                filter: (s) => s.energy < s.energyCapacity && s.structureType != STRUCTURE_LINK && s.structureType != STRUCTURE_STORAGE
             });
 
             if (closestStructure != undefined) {
@@ -155,9 +167,16 @@ var roleHarvester = {
             else {
                 var closestContainer = creep.pos.findClosestByRange(FIND_STRUCTURES,
                     {
-                        filter: (s) => (s.structureType == STRUCTURE_CONTAINER || s.structureType == STRUCTURE_STORAGE || s.structureType == STRUCTURE_TERMINAL) &&
+                        filter: (s) => (s.structureType == STRUCTURE_STORAGE || s.structureType == STRUCTURE_TERMINAL) &&
                         s.store[RESOURCE_ENERGY] < s.storeCapacity && s.pos.findInRange(FIND_SOURCES, 1).length == 0
                     });
+                if (!closestContainer) {
+                    closestContainer = creep.pos.findClosestByRange(FIND_STRUCTURES,
+                        {
+                            filter: (s) => (s.structureType == STRUCTURE_CONTAINER ) &&
+                            s.store[RESOURCE_ENERGY] < s.storeCapacity && s.pos.findInRange(FIND_SOURCES, 1).length == 0
+                        });
+                }
                 if (closestContainer != undefined) {
                     if (creep.transfer(closestContainer, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(closestContainer, {maxRooms: 1, reusePath: 20});

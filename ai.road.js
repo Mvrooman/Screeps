@@ -1,7 +1,9 @@
 var aiRoad = {
 
     run: function () {
-
+        if (Game.cpu.bucket < 9000) {
+            return;
+        }
         let rooms = _.map(Game.creeps, c => c.pos.roomName);
         rooms = _.uniq(rooms);
         console.log('Rooms: ' + JSON.stringify(rooms));
@@ -49,7 +51,7 @@ var aiRoad = {
                 }
 
                 _.forEach(roomRoadFlags, (f) => {
-                    //  f.remove();
+                   //   f.remove();
                     if (!f.memory.lastFatigue) {
                         f.memory.lastFatigue = Game.time;
                     }

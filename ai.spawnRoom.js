@@ -111,7 +111,7 @@ var aiSpawnRoom = {
             //     count: 4
             // });
 
-             var roomRole5 = {roomName: 'E47N36', roles: []};
+            var roomRole5 = {roomName: 'E47N36', roles: []};
             // roomRole5.roles.push({
             //     role: 'repairer',
             //     count: 1
@@ -208,14 +208,13 @@ var aiSpawnRoom = {
                 count: 1
             });
             //var roomRoles = [roomRole8];
-            var roomRoles = [roomRole2, roomRole4, roomRole5, roomRole6,roomRole7,roomRole1];
+            var roomRoles = [roomRole2, roomRole4, roomRole5, roomRole6, roomRole7, roomRole1];
 
             //var roomRoles = [roomRole1,roomRole2];
             //var roomRoles = [roomRole1];
 
             return roomRoles;
         }
-
 
 
         function spawnCreep(roomName, role, creepsInRole) {
@@ -228,10 +227,10 @@ var aiSpawnRoom = {
             switch (role.role) {
                 case 'tank':
                     var result = Game.spawns.HomeSpawn.createCreep(
-                        [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,HEAL,MOVE,MOVE,MOVE], {
-                        role: 'tank',
-                        destination: Game.flags[roomName].pos
-                    });
+                        [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, MOVE, MOVE, MOVE], {
+                            role: 'tank',
+                            destination: Game.flags[roomName].pos
+                        });
 
                     if (result == ERR_NOT_ENOUGH_ENERGY) {
                         console.log('Waiting to spawn ' + role.role.capitalizeFirstLetter() + ' in ' + roomName +
@@ -262,7 +261,7 @@ var aiSpawnRoom = {
                     }
                     break;
                 case 'builder':
-                    var result = Game.spawns.HomeSpawn.createCreep([WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE,MOVE], {
+                    var result = Game.spawns.HomeSpawn.createCreep([WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE], {
                         role: 'builder',
                         destination: Game.flags[roomName].pos
                     });
@@ -275,7 +274,7 @@ var aiSpawnRoom = {
                     }
                     break;
                 case 'repairer':
-                    var result = Game.spawns.HomeSpawn.createCreep([WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE], {
+                    var result = Game.spawns.HomeSpawn.createCreep([WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE,MOVE], {
                         role: 'repairer',
                         destination: Game.flags[roomName].pos
                     });
@@ -303,7 +302,7 @@ var aiSpawnRoom = {
                     }
                     break;
                 case 'reserver':
-                    var result = Game.spawns.HomeSpawn.createCreep([CLAIM, MOVE,CLAIM, MOVE], {
+                    var result = Game.spawns.HomeSpawn.createCreep([CLAIM, MOVE, CLAIM, MOVE], {
                         role: 'reserver',
                         destination: Game.flags[roomName].pos
                     });
@@ -317,7 +316,8 @@ var aiSpawnRoom = {
                     }
                     break;
                 case 'hauler':
-                    var result = Game.spawns.HomeSpawn.createCreep([CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, WORK], {
+                    var result = Game.spawns.HomeSpawn.createCreep([MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY,
+                        MOVE, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, WORK,MOVE], {
                         role: 'hauler',
                         pickupRoomName: role.pickupRoomName,
                         dropRoomName: role.dropRoomName,
@@ -335,7 +335,7 @@ var aiSpawnRoom = {
 
                     break;
                 case 'upgrader':
-                    var result = Game.spawns.HomeSpawn.createCreep([WORK, WORK, WORK, WORK,WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE,MOVE,WORK, CARRY, CARRY], {
+                    var result = Game.spawns.HomeSpawn.createCreep([WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, WORK, CARRY, CARRY], {
                         role: 'upgrader',
                         destination: Game.flags[roomName].pos
                     });
@@ -362,20 +362,20 @@ var aiSpawnRoom = {
                         console.log('Spawning new ' + role.role + ': ' + result + '[' + roomName + ']');
                     }
                     break;
-                // case 'harvester':
-                //     var result = Game.spawns.HomeSpawn.createCreep([WORK, CARRY, MOVE,CARRY, CARRY, MOVE, CARRY, CARRY, MOVE], {
-                //         role: 'harvester',
-                //         destination: Game.flags[roomName].pos
-                //     });
-                //
-                //     if (result == ERR_NOT_ENOUGH_ENERGY) {
-                //         console.log('Waiting to spawn ' + role.role.capitalizeFirstLetter() + ' in ' + roomName +
-                //             ' - [' + Game.spawns.HomeSpawn.room.energyAvailable + '/' + 700);
-                //     }
-                //     else if (!result < 0) {
-                //         console.log('Spawning new ' + role.role + ': ' + result + '[' + roomName + ']');
-                //     }
-                //     break;
+                    // case 'harvester':
+                    //     var result = Game.spawns.HomeSpawn.createCreep([WORK, CARRY, MOVE,CARRY, CARRY, MOVE, CARRY, CARRY, MOVE], {
+                    //         role: 'harvester',
+                    //         destination: Game.flags[roomName].pos
+                    //     });
+                    //
+                    //     if (result == ERR_NOT_ENOUGH_ENERGY) {
+                    //         console.log('Waiting to spawn ' + role.role.capitalizeFirstLetter() + ' in ' + roomName +
+                    //             ' - [' + Game.spawns.HomeSpawn.room.energyAvailable + '/' + 700);
+                    //     }
+                    //     else if (!result < 0) {
+                    //         console.log('Spawning new ' + role.role + ': ' + result + '[' + roomName + ']');
+                    //     }
+                    //     break;
                     break;
                 case 'defense':
                     var result = Game.spawns.HomeSpawn.createCreep([TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, ATTACK, ATTACK, ATTACK, MOVE, MOVE, MOVE, MOVE, MOVE], {
@@ -393,7 +393,7 @@ var aiSpawnRoom = {
                     }
                     break;
                 case 'attackCreep':
-                    var result = Game.spawns.HomeSpawn.createCreep([TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,MOVE, MOVE, MOVE, MOVE,ATTACK, ATTACK,ATTACK, ATTACK, ATTACK, ATTACK ], {
+                    var result = Game.spawns.HomeSpawn.createCreep([TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK], {
                         role: 'attackCreep',
                         destination: Game.flags[roomName].pos
                     });
@@ -434,7 +434,7 @@ var aiSpawnRoom = {
         var currentSpawn = Game.spawns.HomeSpawn.spawning;
         if (currentSpawn != undefined) {
             var creep = Game.creeps[currentSpawn.name];
-            console.log('Spawning ' + creep.memory.role + ' for room ' + creep.memory.destination.roomName );
+            console.log('Spawning ' + creep.memory.role + ' for room ' + creep.memory.destination.roomName);
         }
     }
 }

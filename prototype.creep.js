@@ -2,9 +2,20 @@ module.exports = function () {
     Creep.prototype.gotoRoom = function (roomName) {
         this.memory.destination = Game.flags[roomName].pos;
     }
+    Creep.prototype.wp = function (roomName) {
+        if (this.memory.waypoint) {
+            this.memory.waypoint.push(Game.flags[roomName].pos);
+        }
+        else {
+            this.memory.waypoint = [Game.flags[roomName].pos]
+        }
+    }
+    Creep.prototype.wpc = function (roomName) {
+        this.memory.waypoint = [];
+    }
     Creep.prototype.needsRenew = function (minTicks, maxTicks) {
         // return false;
-        if (this.pos.roomName != 'E43N34') {
+        if (!this.memory.renew) {
             return false;
         }
         if (!this.memory.renewing && this.ticksToLive < minTicks) {
@@ -14,7 +25,7 @@ module.exports = function () {
             if (this.ticksToLive > maxTicks) {
                 this.memory.renewing = false;
             }
-            var closestSpawn = this.pos.findClosestByRange(FIND_MY_SPAWNS);
+            var closestSpawn = this.pos.findClosestByRange(FIND_MY_SPAWNS, {filter: (s) => s.room.name == this.room.name});
             if (closestSpawn == undefined) {
                 this.memory.renewing = false;
                 return false;
@@ -94,18 +105,44 @@ module.exports = function () {
             }
             var destination = this.memory.destination;
             var waypoint = this.memory.waypoint;
-            if (waypoint != undefined) {
-                if (this.pos.inRangeTo(waypoint, 2) && this.room.name == waypoint.roomName) {
-                    console.log('Waypoint reached');
-                    this.memory.waypoint = undefined;
-                    return false;
+            if (waypoint != undefined && waypoint.length > 0 && (!this.memory.sourceRoom || (this.room.name != this.memory.sourceRoom && this.fatigue == 0))) {
+                this.memory.sourceRoom = undefined;
+                var currentWaypoint = new RoomPosition(waypoint[0].x, waypoint[0].y, waypoint[0].roomName);
+                var result = this.moveTo(currentWaypoint);
+
+                let range = this.pos.getRangeTo(currentWaypoint);
+                if (this.memory.lastRange && range == Infinity && this.memory.lastRange < 5) {
+                    console.log('!!!Portal!!!')
+                    this.memory.sourceRoom = waypoint[0].roomName;
+                    this.memory.waypoint.shift();
+                    this.memory.lastRange = undefined;
+                    if (this.memory.waypoint.length == 0) {
+                        return false;
+                    }
+                    else {
+                        return true;
+                    }
                 }
-                this.memory.waypoint = new RoomPosition(this.memory.waypoint.x, this.memory.waypoint.y, this.memory.waypoint.roomName);
-                var result = this.moveTo(this.memory.waypoint);
+
+                this.memory.lastRange = range;
+                if (this.pos.inRangeTo(currentWaypoint, 0) && this.room.name == currentWaypoint.roomName) {
+                    console.log('Waypoint reached');
+                    this.memory.waypoint.shift();
+                    this.memory.lastRange = undefined;
+                    if (this.memory.waypoint.length == 0) {
+                        return false;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+                return true;
+            }
+            else if (this.memory.sourceRoom) {
                 return true;
             }
 
-            if (this.pos.inRangeTo(destination, 2) && this.room.name == destination.roomName) {
+            if (this.room.name == destination.roomName && this.pos.inRangeTo(destination, 2)) {
                 console.log('Destination reached');
                 this.memory.reachedDestination = true;
                 this.memory.destination = undefined;
@@ -118,17 +155,10 @@ module.exports = function () {
                 return false;
             }
             this.memory.destination = new RoomPosition(this.memory.destination.x, this.memory.destination.y, this.memory.destination.roomName);
-            if (Memory.kernal.pathFinding && Game.time % 3 == 0) {
-                result = this.moveTo(this.memory.destination, {
-                    reusePath: 10,
-                    swampCost: 1,
-                    ignoreRoads: true
-                });
-            }
-            else {
-                result = this.moveTo(this.memory.destination, {reusePath: 5});
-            }
-            result = this.moveTo(this.memory.destination, {reusePath: 50});
+
+                result = this.moveTo(this.memory.destination, {reusePath: 15});
+
+           // result = this.moveTo(this.memory.destination, {reusePath: 50});
             if (result != 0 && result != -11 && result && result != -4)
                 console.log(result);
             return true;
@@ -143,22 +173,24 @@ module.exports = function () {
         });
         if (closestLink != undefined) {
             if (closestLink.transferEnergy(this) == ERR_NOT_IN_RANGE) {
-                this.moveTo(closestLink);
+                this.moveTo(closestLink, {costCallback: Empire.stayInRoom});
                 closestLink.transferEnergy(this);
             }
             return;
         }
         var closestEnergy;
-        closestEnergy = this.pos.findClosestByRange(FIND_DROPPED_ENERGY, {filter: (s) => s.room == this.room && s.amount >= 1200});
-        if (!closestEnergy)
-            closestEnergy = this.pos.findClosestByRange(FIND_DROPPED_ENERGY, {filter: (s) => s.room == this.room && s.amount >= 800});
-        if (!closestEnergy)
-            closestEnergy = this.pos.findClosestByRange(FIND_DROPPED_ENERGY, {filter: (s) => s.room == this.room && s.amount >= 500});
+        closestEnergy = Empire.claimEnergy(this.pos.findClosestByRange(FIND_DROPPED_ENERGY, {filter: (s) => s.room == this.room && s.amount >= 1200}), this);
+        if (!closestEnergy) {
+            closestEnergy = Empire.claimEnergy(this.pos.findInRange(FIND_DROPPED_ENERGY, 25, {filter: (s) => s.room == this.room && s.amount >= 600})[0], this);
+        }
+        if (!closestEnergy) {
+            closestEnergy = Empire.claimEnergy(this.pos.findInRange(FIND_DROPPED_ENERGY, 8, {filter: (s) => s.room == this.room && s.amount >= 300})[0], this);
+        }
 
         var closestContainer = this.pos.findClosestByRange(FIND_STRUCTURES,
             {
                 filter: (s) => (s.structureType == STRUCTURE_CONTAINER || s.structureType == STRUCTURE_STORAGE || s.structureType == STRUCTURE_TERMINAL) &&
-                s.store[RESOURCE_ENERGY] > 500 &&
+                s.store[RESOURCE_ENERGY] > 300 &&
                 s.pos.roomName == this.pos.roomName
             });
 
@@ -172,7 +204,7 @@ module.exports = function () {
                 var result;
                 result = this.pickup(closestEnergy);
                 if (result == ERR_NOT_IN_RANGE) {
-                    this.moveTo(closestEnergy);
+                    this.moveTo(closestEnergy, {costCallback: Empire.stayInRoom});
                     this.pickup(closestEnergy);
                 }
                 return;
@@ -182,20 +214,23 @@ module.exports = function () {
         if (closestContainer != undefined) {
             if (closestContainer.transfer(this, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 if (Memory.kernal.pathFinding) {
-                    this.moveTo(closestContainer, {reusePath: 5, swampCost: 1});
+                    this.moveTo(closestContainer, {reusePath: 5, swampCost: 1, costCallback: Empire.stayInRoom});
                 }
                 else {
-                    this.moveTo(closestContainer, {reusePath: 5});
+                    this.moveTo(closestContainer, {reusePath: 5, costCallback: Empire.stayInRoom});
                 }
                 var containerResult = this.withdraw(closestContainer, RESOURCE_ENERGY)
             }
             return;
         }
-        var closestSource = this.pos.findClosestByPath(FIND_SOURCES, {filter: (s) => s.energy > 0});
+        var closestSource = this.pos.findClosestByRange(FIND_SOURCES, {
+            filter: (s) => s.energy > 0
+            && s.room.name == this.pos.roomName
+        });
         if (closestSource != undefined) {
             var harvestResult = this.harvest(closestSource);
             if (harvestResult == ERR_NOT_IN_RANGE) {
-                var result = this.moveTo(closestSource);
+                var result = this.moveTo(closestSource, {costCallback: Empire.stayInRoom});
                 this.harvest(closestSource);
                 // if (result < 0 && result != -11) {
                 //     console.log('Error moving to source: ' + result);
