@@ -13,8 +13,8 @@ var roleBuilder = {
             creep.getNearestEnergy();
             return;
         }
-        if (creep.carry.energy > 100
-            //&& creep.memory.building
+        if (creep.carry.energy > 0
+        //&& creep.memory.building
         ) {
             var closestSites = creep.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 3);
             if (closestSites && closestSites.length > 0) {
@@ -52,6 +52,7 @@ var roleBuilder = {
         if (creep.memory.building) {
             var closestSite = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES);
             if (closestSite != undefined) {
+
                 if (creep.build(closestSite) == ERR_NOT_IN_RANGE) {
                     if (Memory.kernal.pathFinding) {
                         creep.moveTo(closestSite, {reusePath: 5, swampCost: 1, costCallback: Empire.stayInRoom});
@@ -59,8 +60,11 @@ var roleBuilder = {
                     else {
                         creep.moveTo(closestSite, {reusePath: 5, costCallback: Empire.stayInRoom});
                     }
+                    var result = creep.build(closestSite);
+
                 }
-                creep.build(closestSite);
+
+
             }
             else {
                 console.log('No build sites in ' + creep.room.name);

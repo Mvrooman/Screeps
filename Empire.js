@@ -21,7 +21,9 @@ Empire = {
 
                 if (Game.spawns[spawn].pos.roomName[0] == roomName[0]) {
                     let distance = Game.map.findRoute(roomName, Game.spawns[spawn].pos.roomName).length;
-                    spawnlist.push({spawnName: spawn, distance: distance});
+                    if (distance == 0) {
+                        spawnlist.push({spawnName: spawn, distance: distance});
+                    }
                 }
             }
         }
@@ -84,7 +86,8 @@ require('W33S55_FourSpawn')();
 require('W36S53_FiveSpawn')();
 require('W35S53_SixSpawn')();
 require('W43S52_SevenSpawn')();
-
+require('W43S48_EightSpawn')();
+require('W42S48_NineSpawn')();
 
 
 

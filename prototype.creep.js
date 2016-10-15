@@ -63,24 +63,27 @@ module.exports = function () {
             if (road.hits < road.hitsMax * 0.8) {
                 this.repair(road)
             }
+            let end = Game.cpu.getUsed();
         }
+        else if (false) {
 
-        else if (this.fatigue > 0) {
-            var flags = this.pos.lookFor(LOOK_FLAGS);
-            flags = _.filter(flags, f => f.memory.fatigueCount);
-            var flag;
-            if (flags.length > 0) {
-                flag = flags[0];
-                flag.memory.fatigueCount += 1;
+            if (this.fatigue > 0) {
+                var flags = this.pos.lookFor(LOOK_FLAGS);
+                flags = _.filter(flags, f => f.memory.fatigueCount);
+                var flag;
+                if (flags.length > 0) {
+                    flag = flags[0];
+                    flag.memory.fatigueCount += 1;
+                }
+                else {
+                    Memory.kernal.flagRoomCount++;
+                    let flagName = this.pos.createFlag('_' + Memory.kernal.flagRoomCount);
+                    flag = Game.flags[flagName];
+                    flag.memory.fatigueCount = 1;
+                    flag.firstFatigue = Game.time;
+                }
+                flag.lastFatigue = Game.time;
             }
-            else {
-                Memory.kernal.flagRoomCount++;
-                let flagName = this.pos.createFlag('_' + Memory.kernal.flagRoomCount);
-                flag = Game.flags[flagName];
-                flag.memory.fatigueCount = 1;
-                flag.firstFatigue = Game.time;
-            }
-            flag.lastFatigue = Game.time;
         }
     };
 
@@ -95,7 +98,13 @@ module.exports = function () {
         if (!this.memory.base) {
             this.memory.base = this.pos.roomName;
         }
-
+        // if (this.memory.destinationCount) {
+        //     this.memory.destinationCount--;
+        //     if (this.memory.destinationCount <= 0) {
+        //         this.memory.destination = undefined;
+        //
+        //     }
+        // }
         if (this.memory.destination != undefined) {
             if (this.memory.reachedDestination == undefined) {
                 this.memory.travelTime = this.lifespan() - this.ticksToLive;
@@ -143,9 +152,10 @@ module.exports = function () {
             }
 
             if (this.room.name == destination.roomName && this.pos.inRangeTo(destination, 2)) {
-                console.log('Destination reached');
+                // console.log('Destination reached');
                 this.memory.reachedDestination = true;
                 this.memory.destination = undefined;
+                //this.memory.destinationCount = undefined;
                 if (!this.memory.finalDestination) {
                     this.memory.finalDestination = this.pos.finalDestination;
                 }
@@ -156,28 +166,44 @@ module.exports = function () {
             }
             this.memory.destination = new RoomPosition(this.memory.destination.x, this.memory.destination.y, this.memory.destination.roomName);
 
-                result = this.moveTo(this.memory.destination, {reusePath: 15});
+            result = this.moveTo(this.memory.destination, {reusePath: 30, ignoreCreeps: false});
 
-           // result = this.moveTo(this.memory.destination, {reusePath: 50});
-            if (result != 0 && result != -11 && result && result != -4)
-                console.log(result);
+
+            // result = this.moveTo(this.memory.destination, {reusePath: 50});
+            if (result == ERR_NO_PATH) {
+                this.moveTo(this.memory.destination, {reusePath: 5});
+                this.say('Move!')
+                console.log("No path " + this.room.name + " " + this.name);
+            }
             return true;
         }
         return false;
 
     };
 
+    Creep.prototype.inRange = function (roomObject) {
+
+    }
+
     Creep.prototype.getNearestEnergy = function () {
         var closestLink = this.pos.findClosestByRange(FIND_MY_STRUCTURES, {
             filter: (s) => s.structureType == STRUCTURE_LINK && s.energy > 0 && s.pos.roomName == this.pos.roomName && s.pos.inRangeTo(this.room.controller.pos, 10) && s.pos.inRangeTo(this.pos, 10)
         });
+
+
         if (closestLink != undefined) {
-            if (closestLink.transferEnergy(this) == ERR_NOT_IN_RANGE) {
-                this.moveTo(closestLink, {costCallback: Empire.stayInRoom});
+            if (this.pos.isNearTo(closestLink)) {
                 closestLink.transferEnergy(this);
+            }
+            else {
+                // this.memory.destinationCount=5;
+                // this.memory.destination = closestLink.pos;
+                this.moveTo(closestLink, {costCallback: Empire.stayInRoom});
             }
             return;
         }
+
+
         var closestEnergy;
         closestEnergy = Empire.claimEnergy(this.pos.findClosestByRange(FIND_DROPPED_ENERGY, {filter: (s) => s.room == this.room && s.amount >= 1200}), this);
         if (!closestEnergy) {
@@ -196,30 +222,52 @@ module.exports = function () {
 
         if (closestEnergy) {
             this.pickup(closestEnergy);
-            if (closestEnergy.amount > 600) {
+            if (closestEnergy.amount > 3600) {
                 console.log('large energy drop warning (' + closestEnergy.amount + '): ' + this.room.name)
             }
             if (closestEnergy.amount > 800 || closestContainer == undefined ||
                 this.pos.getRangeTo(closestEnergy.pos.x, closestEnergy.pos.y) <= this.pos.getRangeTo(closestContainer.pos.x, closestContainer.pos.y)) {
                 var result;
-                result = this.pickup(closestEnergy);
-                if (result == ERR_NOT_IN_RANGE) {
-                    this.moveTo(closestEnergy, {costCallback: Empire.stayInRoom});
+
+                if (this.pos.isNearTo(closestEnergy)) {
                     this.pickup(closestEnergy);
                 }
+                else {
+                    // this.memory.destinationCount=5;
+                    // this.memory.destination = closestEnergy.pos;
+                    var r = this.moveTo(closestEnergy);
+                }
                 return;
+
+
+                // result = this.pickup(closestEnergy);
+                // if (result == ERR_NOT_IN_RANGE) {
+                //     this.moveTo(closestEnergy, {costCallback: Empire.stayInRoom});
+                //     this.pickup(closestEnergy);
+                // }
+                //
+                //
+                // return;
             }
         }
 
+
         if (closestContainer != undefined) {
-            if (closestContainer.transfer(this, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+
+
+            if (this.pos.isNearTo(closestContainer)) {
+                closestContainer.transfer(this, RESOURCE_ENERGY)
+            }
+            else {
+                // this.memory.destinationCount=5;
+                // this.memory.destination = closestContainer.pos;
+
                 if (Memory.kernal.pathFinding) {
                     this.moveTo(closestContainer, {reusePath: 5, swampCost: 1, costCallback: Empire.stayInRoom});
                 }
                 else {
                     this.moveTo(closestContainer, {reusePath: 5, costCallback: Empire.stayInRoom});
                 }
-                var containerResult = this.withdraw(closestContainer, RESOURCE_ENERGY)
             }
             return;
         }
@@ -230,12 +278,11 @@ module.exports = function () {
         if (closestSource != undefined) {
             var harvestResult = this.harvest(closestSource);
             if (harvestResult == ERR_NOT_IN_RANGE) {
+                // this.memory.destinationCount=5;
+                // this.memory.destination = closestSource.pos;
+
                 var result = this.moveTo(closestSource, {costCallback: Empire.stayInRoom});
-                this.harvest(closestSource);
-                // if (result < 0 && result != -11) {
-                //     console.log('Error moving to source: ' + result);
-                // }
-                // console.log('3:' + this.name);
+
                 return;
             }
             // if (harvestResult < 0) {

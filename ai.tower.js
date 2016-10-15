@@ -32,6 +32,17 @@ var aiTower = {
 
 
             var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: (structure) => structure.hitsMax > 1 && structure.hits < 5000 && structure.structureType == STRUCTURE_RAMPART && structure.hits < structure.hitsMax
+            });
+
+            if (closestDamagedStructure) {
+                console.log('repair tower:' + closestDamagedStructure.pos)
+                tower.repair(closestDamagedStructure);
+                return;
+            }
+
+
+            var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => structure.hitsMax > 1 && structure.hits < 5000 && structure.structureType != STRUCTURE_ROAD && structure.hits < structure.hitsMax
             });
 

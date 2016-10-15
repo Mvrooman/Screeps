@@ -42,7 +42,7 @@ module.exports = function () {
     });
 
     roomW43S52.roles.push({
-        role: 'builder2',
+        role: 'builder',
         count: 4,
     });
     roomW43S52.roles.push({
@@ -77,12 +77,60 @@ module.exports = function () {
     });
 
 
+
+    var roomW44S52 = {roomName: 'W44S52', roles: [], defaultSpawn: Game.spawns['SevenSpawn']};
+    roomW44S52.roles.push({
+        role: 'reserver',
+        count: 1,
+    });
+    roomW44S52.roles.push({
+        role: 'extractor',
+        count: 2,
+        locations: [new RoomPosition(34, 38, 'W44S52'), new RoomPosition(20, 9, 'W44S52')]
+    });
+    roomW44S52.roles.push({
+        role: 'hauler3',
+        dropRoomName: 'W43S52_3',
+        pickupRoomName: 'W44S52',
+        count: 4
+    });
+
+    roomW44S52.roles.push({
+        role: 'attackCreep3',
+        count: 1,
+    });
+    roomW44S52.roles.push({
+        role: 'builder',
+        count: 1,
+    });
+
+
+    var waypoints8 = ['W40S50', 'W40S46'];
+    var roomW43S48 = {roomName: 'W43S48', roles: [], defaultSpawn: Game.spawns['SevenSpawn']};
+    roomW43S48.roles.push({
+        role: 'builder',
+        waypoint:waypoints8,
+        count: 3
+    });
+
+    var roomW42S48 = {roomName: 'W42S48', roles: [], defaultSpawn: Game.spawns['SevenSpawn']};
+    roomW42S48.roles.push({
+        role: 'builder',
+        waypoint:waypoints8,
+        count: 3
+    });
+
+
+
     // if (spawnCount > 4) {
     //
     // }
 
+
+    //Empire.roomSpawns.push(roomW43S48);
+    Empire.roomSpawns.push(roomW44S52);
     Empire.roomSpawns.push(roomW43S53);
-    Empire.roomSpawns.push(roomW43S52);
+   Empire.roomSpawns.push(roomW43S52);
 
 
 };

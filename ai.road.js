@@ -6,7 +6,6 @@ var aiRoad = {
         }
         let rooms = _.map(Game.creeps, c => c.pos.roomName);
         rooms = _.uniq(rooms);
-        console.log('Rooms: ' + JSON.stringify(rooms));
 
         for (let roomIndex in rooms) {
             let exFlags = _.filter(Game.flags, (f) => f.name.startsWith('EX'));

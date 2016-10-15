@@ -44,7 +44,7 @@ var roleCreepAttack = {
 
         var closestHostile = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if (closestHostile) {
-            console.log('Hostile creep')
+            console.log('Hostile creep: ' + creep.room.name);
             creep.rangedAttack(closestHostile);
             var result = creep.attack(closestHostile);
             if (result != OK) {
@@ -99,12 +99,14 @@ var roleCreepAttack = {
 
         var sourceKeeper = _.sortBy(creep.room.find(FIND_HOSTILE_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_KEEPER_LAIR}), (s) => s.ticksToSpawn)[0];
         if (sourceKeeper) {
+            // creep.memory.destinationCount=5;
+            // creep.memory.destination = sourceKeeper.pos;
             creep.moveTo(sourceKeeper, {costCallback: Empire.stayInRoom});
             return;
         }
 
         var enemySites = creep.pos.findClosestByRange(FIND_HOSTILE_CONSTRUCTION_SITES, {filter: (s)=> s.room.name == creep.room.name
-     //   && s.pos.x != creep.pos.x && s.pos.y != creep.pos.y
+       // && s.pos.x != creep.pos.x && s.pos.y != creep.pos.y
         })
         if (enemySites) {
             creep.moveTo(enemySites)

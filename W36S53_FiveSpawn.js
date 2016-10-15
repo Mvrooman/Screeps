@@ -39,9 +39,15 @@ module.exports = function () {
         count: 3,
 
     });
+    roomW36S53.roles.push({
+        role: 'hauler3',
+        dropRoomName: 'W36S53',
+        pickupRoomName: 'W35S53_3',
+        count: 1
+    });
 
     roomW36S53.roles.push({
-        role: 'builder2',
+        role: 'builder',
         count: 4,
     });
     roomW36S53.roles.push({
@@ -54,6 +60,10 @@ module.exports = function () {
     });
 
     var roomW36S52 = {roomName: 'W36S52', roles: [], defaultSpawn: Game.spawns['FiveSpawn']};
+    roomW36S52.roles.push({
+        role: 'attackCreep4',
+        count: 1,
+    });
     roomW36S52.roles.push({
         role: 'reserver',
         count: 1,

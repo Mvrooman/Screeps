@@ -30,16 +30,16 @@ var roleUpgrader = {
         }
         if (creep.memory.upgrading) {
             var result = creep.upgradeController(creep.room.controller);
-           // if (result == ERR_NOT_IN_RANGE) {
+            if (result == ERR_NOT_IN_RANGE || Game.time % 10 == 0) {
                 if (Memory.kernal.pathFinding) {
                     creep.moveTo(creep.room.controller, {reusePath: 5, swampCost: 1, costCallback: Empire.stayInRoom});
                 }
                 else {
                     creep.moveTo(creep.room.controller, {reusePath: 5, costCallback: Empire.stayInRoom});
                 }
-          //  }
+            }
             if (result != OK && result != ERR_NOT_IN_RANGE) {
-                console.log("Upgrade error: " + result + " " + creep.room.name);
+                //console.log("Upgrade error: " + result + " " + creep.room.name);//TODO
                 if (result == ERR_NOT_OWNER) {
                     // creep.memory.role='repairer';
                 }

@@ -61,11 +61,11 @@ var roleExtractor = {
                     creep.harvest(closestSource);
                 }
                 else if (result == OK && _.sum(creep.carry) > 40) {
-                    // var container = creep.room.find(FIND_STRUCTURES, {filter: (s)=> s.pos.x == creep.pos.x && s.pos.y == creep.pos.y && s.structureType == STRUCTURE_STORAGE});
-                    // if(container.length==0)
-                    // {
-                    //     creep.room.createConstructionSite(creep.pos, STRUCTURE_CONTAINER)
-                    // }
+                    var container = creep.room.find(FIND_STRUCTURES, {filter: (s)=> s.pos.x == creep.pos.x && s.pos.y == creep.pos.y && s.structureType == STRUCTURE_STORAGE});
+                    if(container.length==0)
+                    {
+                        creep.room.createConstructionSite(creep.pos, STRUCTURE_CONTAINER)
+                    }
                     var closestSites = creep.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 3);
                     if (closestSites.length > 0) {
                         creep.build(closestSites[0]);

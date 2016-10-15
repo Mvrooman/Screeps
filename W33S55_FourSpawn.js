@@ -22,7 +22,7 @@ module.exports = function () {
     // }
 
 
-       var roomW33S55_2 = {roomName: 'W33S55', roles: [], defaultSpawn: Game.spawns['FourSpawn2']};
+    var roomW33S55_2 = {roomName: 'W33S55', roles: [], defaultSpawn: Game.spawns['FourSpawn2']};
 
     roomW33S55_2.roles.push({
         role: 'attackCreep2',
@@ -30,8 +30,8 @@ module.exports = function () {
 
     });
     roomW33S55_2.roles.push({
-        role: 'harvester2',
-        count: 3,
+        role: 'harvester',
+        count: 2,
     });
 
     roomW33S55_2.roles.push({
@@ -52,8 +52,6 @@ module.exports = function () {
         role: 'miner',
         count: 1
     });
-
-
 
 
     var roomW34S55 = {roomName: 'W34S55', roles: [], defaultSpawn: Game.spawns['FourSpawn2']};
@@ -224,7 +222,7 @@ module.exports = function () {
     });
     roomW32S56.roles.push({
         role: 'builder',
-        count: 2
+        count: 0
     });
     roomW32S56.roles.push({
         role: 'extractor',
@@ -251,7 +249,7 @@ module.exports = function () {
     });
     roomW33S56.roles.push({
         role: 'builder',
-        count: 2
+        count: 0
     });
     roomW33S56.roles.push({
         role: 'extractor',
@@ -265,7 +263,6 @@ module.exports = function () {
         pickupRoomName: 'W33S56',
         count: 2
     });
-
 
 
     var roomW35S55 = {roomName: 'W35S55', roles: [], defaultSpawn: Game.spawns['FourSpawn2']};
@@ -295,37 +292,55 @@ module.exports = function () {
         role: 'hauler2',
         dropRoomName: 'W33S55_D',
         pickupRoomName: 'W35S55',
-        count: 5,
+        count: 10,
     });
-
 
 
     var roomW33S58 = {roomName: 'W33S58', roles: [], defaultSpawn: Game.spawns['FourSpawn2']};
     roomW33S58.roles.push({
-        role: 'attackCreep2', destination:'W33S58',
-        count: 2,
+        role: 'attackCreep2', destination: 'W33S58',
+        count: 1,
 
     });
 
 
+    var roomW30S58 = {roomName: 'W29S58', roles: [], defaultSpawn: Game.spawns['FourSpawn2']};
+
+    roomW30S58.roles.push({
+        role: 'tank4',
+        destination: 'W29S58',
+        count: 0,
+    });
+    roomW30S58.roles.push({
+        role: 'attackCreep2',
+        destination: 'W29S58',
+        count: 3,
+    });
+
+    //  Empire.roomSpawns.push(roomW30S58);
 
 
+    var roomW31S56 = {roomName: 'W31S56', roles: [], defaultSpawn: Game.spawns['FourSpawn2']};
 
-
-
+    roomW31S56.roles.push({
+        role: 'attackCreep2',
+        destination: 'W31S56',
+        count: 1,
+    });
 
 
     //Empire.roomSpawns.push(roomW34S54_2);
-   // Empire.roomSpawns.push(roomW34S54);
+    // Empire.roomSpawns.push(roomW34S54);
     Empire.roomSpawns.push(roomW35S55);
     Empire.roomSpawns.push(roomW34S55);
+    //  Empire.roomSpawns.push(roomW31S56);
 
-    //Empire.roomSpawns.push(roomW32S56); k
 
     Empire.roomSpawns.push(roomW33S56);
-
     Empire.roomSpawns.push(roomW32S56);
-    Empire.roomSpawns.push(roomW33S58);
+
+    //  Empire.roomSpawns.push(roomW33S58);
+
     Empire.roomSpawns.push(roomW33S55_2);
 
 

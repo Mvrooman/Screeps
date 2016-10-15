@@ -28,8 +28,8 @@ module.exports = function () {
 
 
     roomW32S52.roles.push({
-        role: 'harvester2',
-        count: 3
+        role: 'harvester',
+        count: 2
     });
     roomW32S52.roles.push({
         role: 'extractor',
@@ -53,19 +53,11 @@ module.exports = function () {
         count: 1,
     });
 
-
-
-
-
-
-
-
-
     var roomW32S51 = {roomName: 'W32S51', roles: [], defaultSpawn: Game.spawns['TwoSpawn']};
 
     roomW32S51.roles.push({
-        role: 'attackCreep3',
-        count: 2,
+        role: 'attackCreep4',
+        count: 1,
     });
     roomW32S51.roles.push({
         role: 'reserver',
@@ -78,10 +70,10 @@ module.exports = function () {
     });
 
     roomW32S51.roles.push({
-        role: 'hauler3',
+        role: 'hauler2',
         dropRoomName: 'W32S52_2',
         pickupRoomName: 'W32S51',
-        count: 3
+        count: 2
     });
 
 
@@ -107,7 +99,7 @@ module.exports = function () {
         count: 1
     });
     roomW31S51.roles.push({
-        role: 'attackCreep3',
+        role: 'attackCreep4',
         count: 1,
     });
     roomW31S51.roles.push({
@@ -130,42 +122,10 @@ module.exports = function () {
         count: 1
     });
 
-    var roomW30S55 = {roomName: 'W30S55', roles: [], defaultSpawn: Game.spawns['TwoSpawn']};
-    roomW30S55.roles.push({
-        role: 'attackCreep2',
-        destination:'W30S55',
-        count: 2
-    });
 
+  //  Empire.roomSpawns.push(roomW30S58);
 
-    var roomW30S54 = {roomName: 'W30S55', roles: [], defaultSpawn: Game.spawns['TwoSpawn']};
-    roomW30S54.roles.push({
-        role: 'attackCreep2',
-        destination:'W30S55',
-        count: 6,
-    });
-    roomW30S54.roles.push({
-        role: 'tank',
-        destination:'W30S55',
-        count: 6,
-    });
-
-    var roomW29S58 = {roomName: 'W29S58', roles: [], defaultSpawn: Game.spawns['TwoSpawn']};
-
-    roomW29S58.roles.push({
-        role: 'attackCreep2',
-        destination: 'W29S58',
-        count: 2,
-    });
-    roomW29S58.roles.push({
-        role: 'tank4',
-        destination: 'W29S58',
-        count: 6,
-    });
-
-
-
-    Empire.roomSpawns.push(roomW29S58);
+  //  Empire.roomSpawns.push(roomW29S58);
 
      Empire.roomSpawns.push(roomW32S51);
      Empire.roomSpawns.push(roomW31S51);
